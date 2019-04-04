@@ -1,0 +1,47 @@
+{% extends 'cvForm/index.html.twig' %}
+
+{% block up_scripts %}
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <link rel="stylesheet" href="{{ asset('build/static/cvForm/cvForm.css') }}">
+{% endblock %}
+
+{% block page_content %}
+
+
+    <section class="login-block">
+        <div class="container" style="min-width: 350px; max-width: 400px;">
+            <div class="row">
+                <div class="col-12 login-sec">
+                    <p class="text-center"><img src="http://www.casabonsucesso.com.br/img/LOGO_COMPLETO_200px.jpg"/>
+                    </p>
+                    <h2 class="text-center">Cadastro de Currículos</h2>
+
+                    <div id="fixedFlashes"></div>
+
+                    <form class="login-form" action="/cvForm/checkCPF" method="post" id="loginForm">
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('checkCPF') }}"/>
+
+                            <div class="form-group">
+                                <label for="cpf">CPF</label>
+                                <input type="text" class="form-control cpf" name="cpf" id="cpf" value="{{ cpf }}" required/>
+                            </div>
+                            <div class="form-group">
+                                <label></label>
+                                <div class="g-recaptcha" data-sitekey="6LdGOHwUAAAAADFGjadst7Tv7MFfU7YUnouJWqpE"></div>
+                            </div>
+                            <div class="form-check">
+                                <button type="submit" name="btnIniciar" class="btn btn-login float-right"
+                                        value="Iniciar"><i class="fas fa-play-circle"></i> Iniciar
+                                </button>
+                            </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+    </section>
+
+{% endblock %}
+

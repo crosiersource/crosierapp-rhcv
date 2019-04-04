@@ -1,0 +1,849 @@
+{% extends 'cvForm/index.html.twig' %}
+
+{% block up_scripts %}
+    <link rel="stylesheet" href="{{ asset('build/static/cvForm/cvForm.css') }}">
+{% endblock %}
+
+{% block page_content %}
+
+    <section class="login-block">
+        <div class="container">
+            <div class="row">
+
+
+                <div class="col-md-12 login-sec">
+                    <p class="text-center">
+                        <img src="http://www.casabonsucesso.com.br/img/LOGO_COMPLETO_200px.jpg"></a>
+                    </p>
+                    <h2 class="text-center">Currículo</h2>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 required" for="foto">Foto (3x4)</label>
+
+                    </div>
+
+                    <hr>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 required" for="cv_updated"></label>
+                        <div class="col-sm-10">
+
+                            <a class="btn btn-primary" href="{{ url('cv_list') }}" role="button">Voltar para a lista</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 required" for="cv_updated">Data do currículo</label>
+                        <div class="col-sm-10">
+
+                            <input type="text" id="cv_updated" name="cv[updated]" disabled="disabled"
+                                   class="form-control" readonly="readonly"
+                                   value="{{ cv.updated|date('d/m/Y H:i:s') }}">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 required" for="cv_cargosPretendidos">Cargos
+                            pretendidos</label>
+                        <div class="col-sm-10">
+                            {% for cargo in cv.cargosPretendidos %}
+                                <input type="text" disabled="disabled"
+                                       class="form-control" readonly="readonly"
+                                       value="{{ cargo.cargo }}"/><br/>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 required" for="cv_cpf">CPF</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="cv_cpf" name="cv[cpf]" disabled="disabled"
+                                   class="cpf form-control"
+                                   readonly="readonly" value="{{ cv.cpf }}" maxlength="14">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 required"
+                               for="cv_nome">Nome</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="cv_nome" name="cv[nome]" disabled="disabled"
+                                   class="form-control" value="{{ cv.nome }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 required" for="cv_email">E-mail</label>
+                        <div class="col-sm-10">
+                            <input type="email" id="cv_email" name="cv[email]"
+                                   disabled="disabled"
+                                   class="email form-control" readonly="readonly"
+                                   value="{{ cv.email }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="cv_dtNascimento">
+                            Dt Nascimento</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="cv_dtNascimento" name="cv[dtNascimento]"
+                                   disabled="disabled" class="form-control"
+                                   value="{{ cv.dtNascimento|date('d/m/Y') }} - {{ cv.idade }} anos" maxlength="10">
+                            <br/>
+
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 required"
+                               for="cv_naturalidade">Em que cidade nasceu</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="cv_naturalidade" name="cv[naturalidade]"
+                                   disabled="disabled" class="form-control"
+                                   value="{{ cv.naturalidade }}">
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2"
+                               for="cv_conheceAEmpresaTempo">Há quanto tempo conhece nossa empresa?</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="cv_conheceAEmpresaTempo"
+                                   name="cv[conheceAEmpresaTempo]" disabled="disabled"
+                                   aria-describedby="cv_conheceAEmpresaTempo_help"
+                                   class="form-control" value="{{ cv.conheceAEmpresaTempo }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="cv_ehNossoCliente">É nosso cliente?</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="cv_temFilhos"
+                                   name="cv[temFilhos]" disabled="disabled"
+                                   class="form-control" value="{{ cv.ehNossoCliente == 'S' ? 'Sim' : 'Não' }}">
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2"
+                               for="cv_motivosQuerTrabalharAqui">Por quais motivos deseja trabalhar em nossa
+                            empresa?</label>
+                        <div class="col-sm-10">
+                                <textarea id="cv_motivosQuerTrabalharAqui"
+                                          name="cv[motivosQuerTrabalharAqui]" disabled="disabled"
+                                          rows="5"
+                                          class="form-control">{{ cv.motivosQuerTrabalharAqui }}</textarea>
+                        </div>
+                    </div>
+
+                    <hr>
+
+
+                    <div class="card" id="divCamposTelefones">
+                        <h5 class="card-header" style="background-color: lightblue">Telefones</h5>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_telefone1">Fone (1)</label>
+                                <div class="col-sm-5">
+                                    <input type="text" id="cv_telefone1" name="cv[telefone1]" disabled="disabled"
+                                           class="telefone form-control" value="{{ cv.telefone1 }}" maxlength="15">
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" disabled="disabled"
+                                           class="form-control" value="{{ cv.telefone1Tipo }}" maxlength="15">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_telefone2">Fone (2)</label>
+                                <div class="col-sm-5">
+                                    <input type="text" id="cv_telefone2" name="cv[telefone2]" disabled="disabled"
+                                           class="telefone form-control" value="{{ cv.telefone2 }}" maxlength="15">
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" disabled="disabled"
+                                           class="form-control" value="{{ cv.telefone2Tipo }}" maxlength="15">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_telefone3">Fone (3)</label>
+                                <div class="col-sm-5">
+                                    <input type="text" id="cv_telefone3" name="cv[telefone3]" disabled="disabled"
+                                           class="telefone form-control" value="{{ cv.telefone3 }}" maxlength="15">
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" disabled="disabled"
+                                           class="form-control" value="{{ cv.telefone3Tipo }}" maxlength="15">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_telefone4">Fone (4)</label>
+                                <div class="col-sm-5">
+                                    <input type="text" id="cv_telefone4" name="cv[telefone4]" disabled="disabled"
+                                           class="telefone form-control" value="{{ cv.telefone4 }}" maxlength="15">
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" disabled="disabled"
+                                           class="form-control" value="{{ cv.telefone4Tipo }}" maxlength="15">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_telefone5">Fone (5)</label>
+                                <div class="col-sm-5">
+                                    <input type="text" id="cv_telefone5" name="cv[telefone5]" disabled="disabled"
+                                           class="telefone form-control" value="{{ cv.telefone5 }}" maxlength="15">
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" disabled="disabled"
+                                           class="form-control" value="{{ cv.telefone5Tipo }}" maxlength="15">
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card" id="divCamposEnderecoAtual">
+                        <h5 class="card-header" style="background-color: lightcoral">Endereço Atual</h5>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_enderecoAtualLogr">Logradouro</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_enderecoAtualLogr"
+                                           name="cv[enderecoAtualLogr]" disabled="disabled"
+                                           class="form-control" value="{{ cv.enderecoAtualLogr }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_enderecoAtualNumero">Número</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_enderecoAtualNumero"
+                                           name="cv[enderecoAtualNumero]" disabled="disabled"
+                                           class="form-control" value="{{ cv.enderecoAtualNumero }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_enderecoAtualCompl">Complemento</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_enderecoAtualCompl"
+                                           name="cv[enderecoAtualCompl]" disabled="disabled"
+                                           class="form-control" value="{{ cv.enderecoAtualCompl }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_enderecoAtualBairro">Bairro</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_enderecoAtualBairro"
+                                           name="cv[enderecoAtualBairro]" disabled="disabled"
+                                           class="form-control" value="{{ cv.enderecoAtualBairro }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_enderecoAtualCidade">Cidade</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_enderecoAtualCidade"
+                                           name="cv[enderecoAtualCidade]" disabled="disabled"
+                                           class="form-control" value="{{ cv.enderecoAtualCidade }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_enderecoAtualUf">Estado</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_enderecoAtualCidade"
+                                           name="cv[enderecoAtualCidade]" disabled="disabled"
+                                           class="form-control" value="{{ cv.enderecoAtualUf }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_enderecoAtualTempoResid">Tempo em que reside</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_enderecoAtualTempoResid"
+                                           name="cv[enderecoAtualTempoResid]" disabled="disabled"
+                                           class="form-control" value="{{ cv.enderecoAtualTempoResid }}">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card" id="divCamposEstadoCivil">
+                        <h5 class="card-header" style="background-color: lightgray">Estado Civil</h5>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_estadoCivil">Estado Civil</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_estadoCivil"
+                                           name="cv[estadoCivil]" disabled="disabled"
+                                           class="form-control" value="{{ cv.estadoCivil }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_conjugeNome">Nome do cônjuge</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_conjugeNome" name="cv[conjugeNome]"
+                                           disabled="disabled" class="form-control"
+                                           value="{{ cv.conjugeNome }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_conjugeProfissao">Profissão do cônjuge</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_conjugeProfissao"
+                                           name="cv[conjugeProfissao]" disabled="disabled"
+                                           class="form-control" value="{{ cv.conjugeProfissao }}">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card" id="divCamposFilhos">
+                        <h5 class="card-header" style="background-color: lightsalmon">Filhos</h5>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_temFilhos">Filhos</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_temFilhos"
+                                           name="cv[temFilhos]" disabled="disabled"
+                                           class="form-control" value="{{ cv.temFilhos == 'S' ? 'Sim' : 'Não' }}">
+                                </div>
+                            </div>
+
+                            <div style="" id="divQtdeFilhos">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-2"
+                                           for="cv_qtdeFilhos">Qtde Filhos</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" id="cv_qtdeFilhos"
+                                               name="cv[qtdeFilhos]" disabled="disabled"
+                                               class="form-control" value="{{ cv.qtdeFilhos }}">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div id="dadosFilhos" style="">
+
+                                {% for k,filho in cv.filhos %}
+                                    <div class="card">
+                                        <h5 class="card-header">Filho ({{ k+1 }})</h5>
+                                        <div class="card-body">
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-sm-2"
+                                                       for="filho{{ k+1 }}_nome">Nome</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="filho{{ k+1 }}_nome"
+                                                           name="filho[{{ k+1 }}][nome]"
+                                                           class="form-control" value="{{ filho.nome }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-sm-2"
+                                                       for="filho{{ k+1 }}_dtNascimento">Dt Nascimento</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="filho{{ k+1 }}_dtNascimento"
+                                                           name="filho[{{ k+1 }}][dtNascimento]"
+                                                           class="form-control"
+                                                           maxlength="10"
+                                                           value="{{ filho.dtNascimento|date('d/m/Y H:i:s') }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-sm-2"
+                                                       for="filho{{ k+1 }}_ocupacao">Ocupação</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="filho{{ k+1 }}_ocupacao"
+                                                           name="filho[1][ocupacao]"
+                                                           class="form-control" value="{{ filho.ocupacao }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-sm-2"
+                                                       for="filho{{ k+1 }}_obs">Cuidados</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="filho{{ k+1 }}_obs"
+                                                           name="filho[{{ k+1 }}][obs]"
+                                                           class="form-control" value="{{ filho.obs }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card" id="divCamposFiliacao">
+                        <h5 class="card-header" style="background-color: lightgreen">Filiação</h5>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_maeNome">Nome da mãe</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_maeNome" name="cv[maeNome]"
+                                           disabled="disabled" aria-describedby="cv_maeNome_help"
+                                           class="form-control" value="{{ cv.maeNome }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_maeProfissao">Profissão da mãe</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_maeProfissao"
+                                           name="cv[maeProfissao]" disabled="disabled"
+                                           aria-describedby="cv_maeProfissao_help"
+                                           class="form-control" value="{{ cv.maeProfissao }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_paiNome">Nome do pai</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_paiNome" name="cv[paiNome]"
+                                           disabled="disabled" aria-describedby="cv_paiNome_help"
+                                           class="form-control" value="{{ cv.paiNome }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_paiProfissao">Profissão do
+                                    pai</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_paiProfissao"
+                                           name="cv[paiProfissao]"
+                                           aria-describedby="cv_paiProfissao_help"
+                                           class="form-control" value="{{ cv.paiProfissao }}">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="card" id="divCamposReferencias1">
+                        <h5 class="card-header" style="background-color: lightsteelblue">Referência (1)</h5>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_referencia1Nome">Nome</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_referencia1Nome"
+                                           name="cv[referencia1Nome]" disabled="disabled"
+                                           class="form-control" value="{{ cv.referencia1Nome }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_referencia1Relacao">Relação</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_referencia1Relacao"
+                                           name="cv[referencia1Relacao]" disabled="disabled"
+                                           aria-describedby="cv_referencia1Relacao_help"
+                                           class="form-control" value="{{ cv.referencia1Relacao }}">
+                                    <small id="cv_referencia1Relacao_help" class="form-text text-muted">Informar o
+                                        tipo de relação: amigo, vizinho, familiar, colega de trabalho, etc.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_referencia1Telefone1">Fone
+                                    (1)</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_referencia1Telefone1"
+                                           name="cv[referencia1Telefone1]" disabled="disabled"
+                                           class="telefone form-control" value="{{ cv.referencia1Telefone1 }}"
+                                           maxlength="15">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_referencia1Telefone2">Fone
+                                    (2)</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_referencia1Telefone2"
+                                           name="cv[referencia1Telefone2]" disabled="disabled"
+                                           class="telefone form-control" value="{{ cv.referencia1Telefone2 }}"
+                                           maxlength="15">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="card" id="divCamposReferencias2">
+                        <h5 class="card-header" style="background-color: lightskyblue">Referência (2)</h5>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_referencia2Nome">Nome</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_referencia2Nome"
+                                           name="cv[referencia2Nome]" disabled="disabled"
+                                           class="form-control"
+                                           value="{{ cv.referencia2Nome }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_referencia2Relacao">Relação</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_referencia2Relacao"
+                                           name="cv[referencia2Relacao]" disabled="disabled"
+                                           aria-describedby="cv_referencia2Relacao_help"
+                                           class="form-control" value="{{ cv.referencia2Relacao }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_referencia2Telefone1">Fone
+                                    (1)</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_referencia2Telefone1"
+                                           name="cv[referencia2Telefone1]" disabled="disabled"
+                                           class="telefone form-control" value="{{ cv.referencia2Telefone1 }}"
+                                           maxlength="15">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_referencia2Telefone2">Fone
+                                    (2)</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_referencia2Telefone2"
+                                           name="cv[referencia2Telefone2]" disabled="disabled"
+                                           class="telefone form-control" value="{{ cv.referencia2Telefone2 }}"
+                                           maxlength="15">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="card" id="divCamposEstudo">
+                        <h5 class="card-header" style="background-color: gold">Estudos</h5>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_ensinoFundamentalStatus">Ensino
+                                    Fundamental</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_ensinoFundamentalStatus"
+                                           disabled="disabled"
+                                           class="form-control" value="{{ cv.ensinoFundamentalStatusStr }}"
+                                           maxlength="15">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_ensinoFundamentalLocal">Escola</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_ensinoFundamentalLocal"
+                                           name="cv[ensinoFundamentalLocal]" disabled="disabled"
+                                           class="form-control" value="{{ cv.ensinoFundamentalLocal }}">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_ensinoMedioStatus">Ensino Médio</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_ensinoMedioStatus"
+                                           disabled="disabled"
+                                           class="form-control" value="{{ cv.ensinoMedioStatusStr }}"
+                                           maxlength="15">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_ensinoMedioLocal">Escola</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_ensinoMedioLocal"
+                                           name="cv[ensinoMedioLocal]" disabled="disabled"
+                                           class="form-control" value="{{ cv.ensinoMedioLocal }}">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_ensinoSuperiorStatus">Ensino Superior</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_ensinoSuperiorStatus"
+                                           disabled="disabled"
+                                           class="form-control" value="{{ cv.ensinoSuperiorStatusStr }}"
+                                           maxlength="15">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_ensinoSuperiorLocal">Faculdade/Curso</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_ensinoSuperiorLocal"
+                                           name="cv[ensinoSuperiorLocal]" disabled="disabled"
+                                           aria-describedby="cv_ensinoSuperiorLocal_help"
+                                           class="form-control" value="{{ cv.ensinoSuperiorLocal }}">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_ensinoDemaisObs">Outros</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_ensinoDemaisObs"
+                                           name="cv[ensinoDemaisObs]" disabled="disabled"
+                                           class="form-control" value="{{ cv.ensinoDemaisObs }}">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card" id="divCamposEmpregos">
+                        <h5 class="card-header" style="background-color: khaki">Empregos Anteriores</h5>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" for="cv_jaTrabalhou">Já
+                                    trabalhou?</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_jaTrabalhou"
+                                           name="cv[jaTrabalhou]" disabled="disabled"
+                                           class="form-control" value="{{ cv.jaTrabalhou == 'S' ? 'Sim' : 'Não' }}">
+                                </div>
+                            </div>
+
+                            <div style="" id="divQtdeEmpregos">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-2"
+                                           for="cv_qtdeEmpregos">Qtde Empregos</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" id="cv_qtdeEmpregos"
+                                               name="cv[qtdeEmpregos]" disabled="disabled"
+                                               class="form-control" value="{{ cv.qtdeEmpregos }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="dadosEmpregos" style="">
+                                {% for k,emprego in cv.experProfis %}
+                                    <div class="card">
+                                        <h5 class="card-header">Emprego ({{ k+1 }})</h5>
+                                        <div class="card-body">
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-sm-2"
+                                                       for="emprego{{ k+1 }}_nomeEmpresa">Empresa</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="emprego1_nomeEmpresa" disabled readonly
+                                                           name="emprego[{{ k+1 }}][nomeEmpresa]"
+                                                           class="form-control"
+                                                           value="{{ emprego.nomeEmpresa }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-sm-2"
+                                                       for="emprego{{ k+1 }}_localEmpresa">Onde
+                                                    fica</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="emprego{{ k+1 }}_localEmpresa" disabled
+                                                           readonly
+                                                           name="emprego[{{ k+1 }}][localEmpresa]"
+                                                           class="form-control"
+                                                           value="{{ emprego.localEmpresa }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-sm-2"
+                                                       for="emprego{{ k+1 }}_nomeSuperior">Nome do superior
+                                                    imediato</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="emprego1_nomeSuperior" disabled readonly
+                                                           name="emprego[{{ k+1 }}][nomeSuperior]"
+                                                           class="form-control"
+                                                           value="{{ emprego.nomeSuperior }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-sm-2" for="emprego{{ k+1 }}_cargo">Cargo</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="emprego{{ k+1 }}_cargo"
+                                                           name="emprego[{{ k+1 }}][cargo]" disabled readonly
+                                                           class="form-control" value="{{ emprego.cargo }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-sm-2"
+                                                       for="emprego{{ k+1 }}_horario">Horário</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="emprego{{ k+1 }}_horario"
+                                                           name="emprego[{{ k+1 }}][horario]" disabled readonly
+                                                           class="form-control" value="{{ emprego.horario }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-sm-2"
+                                                       for="emprego{{ k+1 }}_admissao">Dt Admissão</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="emprego{{ k+1 }}_admissao" disabled
+                                                           readonly
+                                                           name="emprego[{{ k+1 }}][admissao]" class="form-control"
+                                                           maxlength="10"
+                                                           value="{{ emprego.admissao|date('d/m/Y') }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-sm-2"
+                                                       for="emprego{{ k+1 }}_demissao">Dt Demissão</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="emprego{{ k+1 }}_demissao" disabled
+                                                           readonly
+                                                           name="emprego[{{ k+1 }}][demissao]"
+                                                           class="crsr-date form-control"
+                                                           maxlength="10"
+                                                           value="{{ emprego.demissao|date('d/m/Y') }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row" style="">
+                                                <label class="col-form-label col-sm-2"
+                                                       for="emprego{{ k+1 }}_ultimoSalario">Último Salário</label>
+                                                <div class="col-sm-10">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span
+                                                                    class="input-group-text">R$ </span>
+                                                        </div>
+                                                        <input type="text" id="emprego{{ k+1 }}_ultimoSalario"
+                                                               name="emprego[{{ k+1 }}][ultimoSalario]"
+                                                               disabled readonly
+                                                               class="crsr-money form-control"
+                                                               value="{{ emprego.ultimoSalario }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-sm-2"
+                                                       for="emprego{{ k+1 }}_beneficios">Benefícios</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="emprego{{ k+1 }}_beneficios" disabled
+                                                           readonly
+                                                           name="emprego[{{ k+1 }}][beneficios]"
+                                                           class="form-control"
+                                                           value="{{ emprego.beneficios }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-sm-2"
+                                                       for="emprego{{ k+1 }}_motivoDesligamento">Motivo do
+                                                    Desligamento</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="emprego{{ k+1 }}_motivoDesligamento"
+                                                           disabled readonly
+                                                           name="emprego[{{ k+1 }}][motivoDesligamento]"
+                                                           class="form-control"
+                                                           value="{{ emprego.motivoDesligamento }}">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card" id="divCamposFamiliaresCrediario">
+                        <h5 class="card-header" style="background-color: mediumturquoise">Familiares com cadastro em
+                            nosso crediário</h5>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_parente1FichaCrediarioNome">Nome (1)</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_parente1FichaCrediarioNome"
+                                           name="cv[parente1FichaCrediarioNome]"
+                                           disabled="disabled" class="form-control"
+                                           value="{{ cv.parente1FichaCrediarioNome }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_parente2FichaCrediarioNome">Nome (2)</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_parente2FichaCrediarioNome"
+                                           name="cv[parente2FichaCrediarioNome]"
+                                           disabled="disabled" class="form-control"
+                                           value="{{ cv.parente2FichaCrediarioNome }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="divCamposConhecidosLoja">
+                        <h5 class="card-header" style="background-color: springgreen">Conhecidos que já trabalharam
+                            ou ainda trabalham em nossa empresa</h5>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_conhecido1TrabalhouNaEmpresa">Nome (1)</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_conhecido1TrabalhouNaEmpresa"
+                                           name="cv[conhecido1TrabalhouNaEmpresa]"
+                                           disabled="disabled" class="form-control"
+                                           value="{{ cv.conhecido1TrabalhouNaEmpresa }}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2"
+                                       for="cv_conhecido2TrabalhouNaEmpresa">Nome
+                                    (2)</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cv_conhecido2TrabalhouNaEmpresa"
+                                           name="cv[conhecido2TrabalhouNaEmpresa]"
+                                           disabled="disabled" class="form-control"
+                                           value="{{ cv.conhecido2TrabalhouNaEmpresa }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+                    {{ form_start(form) }}
+                    {{ form_row(form._token) }}
+                    {{ form_row(form.id) }}
+
+                        <div class="card" id="divAvalia">
+                            <h4 class="card-header" style="background-color: indianred">Avaliação</h4>
+                            <div class="card-body">
+                                {{ form_row(form.avaliacao) }}
+                                {{ form_row(form.status) }}
+                            </div>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col text-right">
+                                        <button type="submit"
+                                                class="btn btn-primary btn-lg"
+                                                value="Salvar">
+                                            <i class="fas fa-save" aria-hidden="true"></i> Salvar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {{ form_end(form, {'render_rest': false}) }}
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

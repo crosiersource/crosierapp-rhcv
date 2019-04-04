@@ -1,2 +1,2 @@
-# crosierapp-rhcv
-Controle de Currículos
+# crosierapp-helloworld
+Projeto de exemplo para um CrosierApp

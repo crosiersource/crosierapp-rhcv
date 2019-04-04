@@ -1,0 +1,531 @@
+{% extends 'cvForm/index.html.twig' %}
+
+{% block up_scripts %}
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <link rel="stylesheet" href="{{ asset('build/static/cvForm/cvForm.css') }}">
+{% endblock %}
+
+{% block page_content %}
+
+    <section class="login-block">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 login-sec">
+                    <p class="text-center"><a href="{{ url('cvForm_cv') }}"><img
+                                    src="http://www.casabonsucesso.com.br/img/LOGO_COMPLETO_200px.jpg"/></a>
+                    </p>
+                    <h2 class="text-center">Cadastro de Currículo</h2>
+                    <div class="alert alert-primary" role="alert">
+                        Caso encontre alguma dificuldade ou erro, favor entrar em contato pelo e-mail
+                        casabonsucesso@gmail.com, ou pelo telefone (42) 3227-6650.
+                    </div>
+
+                    <div id="fixedFlashes"></div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2 required" for="foto">Foto (3x4)</label>
+
+                        {% if cv.foto %}
+
+                            <div class="col-sm-10">
+                                <div style="width: 120px; float: left; height: 160px; border: dashed thin grey;">
+                                    <img src="https://cv.casabonsucesso.com.br/images/fotos3x4/{{ cv.foto }}"
+                                         style="width: 100%"/>
+                                </div>
+                                <div>
+                                    <button type="button" value="Deletar" class="btn btn-warning CV_BTN_ACTION"
+                                            data-url="/cvForm/deleteFoto" data-target="#confirmationModal"
+                                            data-toggle="modal">
+                                        <i class="fas fa-trash" aria-hidden="true"></i> Deletar
+                                    </button>
+                                </div>
+                            </div>
+
+                        {% else %}
+
+                            <div class="col-sm-10">
+                                <div id="divDropzone">
+                                    <div id="dz-clickable" class="alert alert-primary text-center align-middle"
+                                         role="alert"
+                                         style="cursor: pointer; width: 120px;height: 160px; border: dashed thin grey;">
+                                        Clique ou solte uma imagem aqui.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="dzTemplate" style="display: none">
+                                <div class="dz-preview dz-file-preview" style="width: 100%">
+                                    <div class="dz-details"
+                                         style="float: left; width: 120px;height: 160px; border: dashed thin grey;">
+                                        <img data-dz-thumbnail/>
+                                    </div>
+                                    <div>
+                                        <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span>
+                                        </div>
+                                        <div class="dz-error-message"><span data-dz-errormessage></span></div>
+                                        <button type="button" value="Deletar" class="btn btn-warning"
+                                                data-jsfunction="dzRemoveAll" data-target="#confirmationModal"
+                                                data-toggle="modal">
+                                            <i class="fas fa-trash" aria-hidden="true"></i> Deletar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+
+                    {{ form_start(form) }}
+
+
+
+                    {{ form_row(form.id) }}
+
+                    {% if modoExibicao == false %}
+
+                        <hr/>
+                        {% if status == 'ABERTO' %}
+
+                            <div class="form-group row" style="background-color: cornsilk; padding: 15px">
+                                <label class="col-form-label col-sm-2 required">Finalização</label>
+                                <div class="col-sm-10">
+                                    <button id="btnFechar" type="button" data-url="/cvForm/fechar"
+                                            data-target="#confirmationModal" data-toggle="modal"
+                                            class="btn btn-primary" value="Finalizar e enviar">
+                                        <i class="fas fa-calendar-check"></i> Finalizar e enviar
+                                    </button>
+                                    <small class="form-text text-muted">Após preencher todas as informações, clique aqui
+                                        para finalizar a edição e enviar seu currículo para a administração
+                                        (<b>v.{{ cv.versao }}</b>).
+                                    </small>
+                                </div>
+                            </div>
+
+                        {% else %}
+
+                            <div class="form-group row" style="background-color: cornsilk; padding: 15px">
+                                <label class="col-form-label col-sm-2 required"> </label>
+                                <div class="col-sm-10">
+                                    <br/>
+                                    <button id="btnVersionar" type="button" data-url="/cvForm/versionar"
+                                            data-target="#confirmationModal" data-toggle="modal"
+                                            class="btn btn-primary" value="Abrir para edição">
+                                        <i class="far fa-edit"></i> Abrir para edição
+                                    </button>
+                                    <small class="form-text text-muted">Clique aqui para abrir o currículo para nova
+                                        edição (a versão anterior - v.{{ cv.versao }} - será salva).
+                                    </small>
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                    {% endif %}
+
+                    <hr/>
+
+                    <div class="form-group row">
+                        {{ form_label(form.updated) }}
+                        <div class="col-sm-7">
+                            {{ form_errors(form.updated) }}
+                            {{ form_widget(form.updated) }}
+                            {{ form_help(form.updated) }}
+
+                        </div>
+                        <div class="col-sm-3 text-right">
+                            <button id="btnLogout" type="button"
+                                    onclick="window.location.href = '{{ url('cvForm_logout') }}'"
+                                    class="btn btn-primary" value="Sair">
+                                <i class="fas fa-sign-out-alt"></i> Sair
+                            </button>
+                        </div>
+                    </div>
+
+
+                    {{ form_row(form.updated) }}
+
+                    {{ form_row(form.cargosPretendidos) }}
+
+                    {{ form_row(form._token) }}
+
+                    {{ form_row(form.cpf) }}
+                    {{ form_row(form.nome) }}
+                    {{ form_row(form.email) }}
+
+                    {% if modoExibicao == false %}
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2 required" for="password">Senha</label>
+                            <div class="col-sm-10">
+                                <button type="button"
+                                        onclick="window.location.href = '{{ url('cvForm_alterarSenha') }}'"
+                                        class="btn btn-primary" value="Alterar a senha">
+                                    <i class="fas fa-unlock-alt"></i> Alterar a senha
+                                </button>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {{ form_row(form.dtNascimento) }}
+
+                    {% if modoExibicao == true %}
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2 required" for="password">Idade</label>
+                            <div class="col-sm-10">
+
+                                <input type="text" class="form-control" value="{{ cv.idade }}" disabled="disabled">
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {{ form_row(form.naturalidade) }}
+
+                    <hr/>
+                    {{ form_row(form.conheceAEmpresaTempo) }}
+                    {{ form_row(form.ehNossoCliente) }}
+
+                    <hr/>
+                    {{ form_row(form.motivosQuerTrabalharAqui) }}
+
+                    <hr/>
+
+                    <div class="row" style="padding-bottom: 30px">
+                        <div class="col text-right">
+                            <button type="submit" class="btn btn-primary btn-lg btnSalvarAnchored CV_BTN_ACTION"
+                                    value="Salvar">
+                                <i class="fas fa-save" aria-hidden="true"></i> Salvar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card" id="divCamposTelefones">
+                        <h5 class="card-header" style="background-color: lightblue">Telefones</h5>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                {{ form_label(form.telefone1) }}
+                                <div class="col-sm-5">
+                                    {{ form_errors(form.telefone1) }}
+                                    {{ form_widget(form.telefone1) }}
+                                    {{ form_help(form.telefone1) }}
+                                </div>
+                                <div class="col-sm-5">
+                                    {{ form_errors(form.telefone1Tipo) }}
+                                    {{ form_widget(form.telefone1Tipo) }}
+                                    {{ form_help(form.telefone1Tipo) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                {{ form_label(form.telefone2) }}
+                                <div class="col-sm-5">
+                                    {{ form_errors(form.telefone2) }}
+                                    {{ form_widget(form.telefone2) }}
+                                    {{ form_help(form.telefone2) }}
+                                </div>
+                                <div class="col-sm-5">
+                                    {{ form_errors(form.telefone2Tipo) }}
+                                    {{ form_widget(form.telefone2Tipo) }}
+                                    {{ form_help(form.telefone2Tipo) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                {{ form_label(form.telefone3) }}
+                                <div class="col-sm-5">
+                                    {{ form_errors(form.telefone3) }}
+                                    {{ form_widget(form.telefone3) }}
+                                    {{ form_help(form.telefone3) }}
+                                </div>
+                                <div class="col-sm-5">
+                                    {{ form_errors(form.telefone3Tipo) }}
+                                    {{ form_widget(form.telefone3Tipo) }}
+                                    {{ form_help(form.telefone3Tipo) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                {{ form_label(form.telefone4) }}
+                                <div class="col-sm-5">
+                                    {{ form_errors(form.telefone4) }}
+                                    {{ form_widget(form.telefone4) }}
+                                    {{ form_help(form.telefone4) }}
+                                </div>
+                                <div class="col-sm-5">
+                                    {{ form_errors(form.telefone4Tipo) }}
+                                    {{ form_widget(form.telefone4Tipo) }}
+                                    {{ form_help(form.telefone4Tipo) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                {{ form_label(form.telefone5) }}
+                                <div class="col-sm-5">
+                                    {{ form_errors(form.telefone5) }}
+                                    {{ form_widget(form.telefone5) }}
+                                    {{ form_help(form.telefone5) }}
+                                </div>
+                                <div class="col-sm-5">
+                                    {{ form_errors(form.telefone5Tipo) }}
+                                    {{ form_widget(form.telefone5Tipo) }}
+                                    {{ form_help(form.telefone5Tipo) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col text-right">
+                                    <button type="button" class="btn btn-primary btn-lg btnSalvarAnchored CV_BTN_ACTION"
+                                            data-div="divCamposTelefones" value="Salvar">
+                                        <i class="fas fa-save" aria-hidden="true"></i> Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="divCamposEnderecoAtual">
+                        <h5 class="card-header" style="background-color: lightcoral">Endereço Atual</h5>
+                        <div class="card-body">
+                            {{ form_row(form.enderecoAtualLogr) }}
+                            {{ form_row(form.enderecoAtualNumero) }}
+                            {{ form_row(form.enderecoAtualCompl) }}
+                            {{ form_row(form.enderecoAtualBairro) }}
+                            {{ form_row(form.enderecoAtualCidade) }}
+                            {{ form_row(form.enderecoAtualUf) }}
+                            {{ form_row(form.enderecoAtualTempoResid) }}
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col text-right">
+                                    <button type="button" class="btn btn-primary btn-lg btnSalvarAnchored CV_BTN_ACTION"
+                                            data-div="divCamposEnderecoAtual" value="Salvar">
+                                        <i class="fas fa-save" aria-hidden="true"></i> Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card" id="divCamposEstadoCivil">
+                        <h5 class="card-header" style="background-color: lightgray">Estado Civil</h5>
+                        <div class="card-body">
+                            {{ form_row(form.estadoCivil) }}
+                            {{ form_row(form.conjugeNome) }}
+                            {{ form_row(form.conjugeProfissao) }}
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col text-right">
+                                    <button type="button" class="btn btn-primary btn-lg btnSalvarAnchored CV_BTN_ACTION"
+                                            data-div="divCamposEstadoCivil" value="Salvar">
+                                        <i class="fas fa-save" aria-hidden="true"></i> Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card" id="divCamposFilhos">
+                        <h5 class="card-header" style="background-color: lightsalmon">Filhos</h5>
+                        <div class="card-body">
+                            {{ form_row(form.temFilhos) }}
+
+                            <div style="display: none;" id="divQtdeFilhos">
+                                {{ form_row(form.qtdeFilhos) }}
+                            </div>
+
+                            <span id="dadosFilhosJSON" style="display: none;">{{ dadosFilhosJSON|raw }}</span>
+
+                            <div id="dadosFilhos" style="display: none;">
+
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col text-right">
+                                    <button type="button" class="btn btn-primary btn-lg btnSalvarAnchored CV_BTN_ACTION"
+                                            data-div="divCamposFilhos" value="Salvar">
+                                        <i class="fas fa-save" aria-hidden="true"></i> Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card" id="divCamposFiliacao">
+                        <h5 class="card-header" style="background-color: lightgreen">Filiação</h5>
+                        <div class="card-body">
+                            {{ form_row(form.maeNome) }}
+                            {{ form_row(form.maeProfissao) }}
+                            {{ form_row(form.paiNome) }}
+                            {{ form_row(form.paiProfissao) }}
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col text-right">
+                                    <button type="button" class="btn btn-primary btn-lg btnSalvarAnchored CV_BTN_ACTION"
+                                            data-div="divCamposFiliacao" value="Salvar">
+                                        <i class="fas fa-save" aria-hidden="true"></i> Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="divCamposReferencias1">
+                        <h5 class="card-header" style="background-color: lightsteelblue">Referência (1)</h5>
+                        <div class="card-body">
+                            {{ form_row(form.referencia1Nome) }}
+                            {{ form_row(form.referencia1Relacao) }}
+                            {{ form_row(form.referencia1Telefone1) }}
+                            {{ form_row(form.referencia1Telefone2) }}
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col text-right">
+                                    <button type="button" class="btn btn-primary btn-lg btnSalvarAnchored CV_BTN_ACTION"
+                                            data-div="divCamposReferencias1" value="Salvar">
+                                        <i class="fas fa-save" aria-hidden="true"></i> Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="divCamposReferencias2">
+                        <h5 class="card-header" style="background-color: lightskyblue">Referência (2)</h5>
+                        <div class="card-body">
+                            {{ form_row(form.referencia2Nome) }}
+                            {{ form_row(form.referencia2Relacao) }}
+                            {{ form_row(form.referencia2Telefone1) }}
+                            {{ form_row(form.referencia2Telefone2) }}
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col text-right">
+                                    <button type="button" class="btn btn-primary btn-lg btnSalvarAnchored CV_BTN_ACTION"
+                                            data-div="divCamposReferencias2" value="Salvar">
+                                        <i class="fas fa-save" aria-hidden="true"></i> Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="divCamposEstudo">
+                        <h5 class="card-header" style="background-color: gold">Estudos</h5>
+                        <div class="card-body">
+                            {{ form_row(form.ensinoFundamentalStatus) }}
+                            {{ form_row(form.ensinoFundamentalLocal) }}
+                            <hr/>
+                            {{ form_row(form.ensinoMedioStatus) }}
+                            {{ form_row(form.ensinoMedioLocal) }}
+                            <hr/>
+                            {{ form_row(form.ensinoSuperiorStatus) }}
+                            {{ form_row(form.ensinoSuperiorLocal) }}
+                            <hr/>
+                            {{ form_row(form.ensinoDemaisObs) }}
+
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col text-right">
+                                    <button type="button" class="btn btn-primary btn-lg btnSalvarAnchored CV_BTN_ACTION"
+                                            data-div="divCamposEstudo" value="Salvar">
+                                        <i class="fas fa-save" aria-hidden="true"></i> Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="divCamposEmpregos">
+                        <h5 class="card-header" style="background-color: khaki">Empregos Anteriores</h5>
+                        <div class="card-body">
+                            {{ form_row(form.jaTrabalhou) }}
+
+                            <div style="display: none;" id="divQtdeEmpregos">
+                                {{ form_row(form.qtdeEmpregos) }}
+                            </div>
+
+                            <span id="dadosEmpregosJSON" style="display: none;">{{ dadosEmpregosJSON|raw }}</span>
+
+                            <div id="dadosEmpregos" style="display: none;">
+
+                            </div>
+
+
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col text-right">
+                                    <button type="button" class="btn btn-primary btn-lg btnSalvarAnchored CV_BTN_ACTION"
+                                            data-div="divCamposEmpregos" value="Salvar">
+                                        <i class="fas fa-save" aria-hidden="true"></i> Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card" id="divCamposFamiliaresCrediario">
+                        <h5 class="card-header" style="background-color: mediumturquoise">Familiares com cadastro em
+                            nosso crediário</h5>
+                        <div class="card-body">
+                            {{ form_row(form.parente1FichaCrediarioNome) }}
+                            {{ form_row(form.parente2FichaCrediarioNome) }}
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col text-right">
+                                    <button type="button" class="btn btn-primary btn-lg btnSalvarAnchored CV_BTN_ACTION"
+                                            data-div="divCamposFamiliaresCrediario" value="Salvar">
+                                        <i class="fas fa-save" aria-hidden="true"></i> Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="divCamposConhecidosLoja">
+                        <h5 class="card-header" style="background-color: springgreen">Conhecidos que já trabalharam ou
+                            ainda trabalham em nossa empresa</h5>
+                        <div class="card-body">
+                            {{ form_row(form.conhecido1TrabalhouNaEmpresa) }}
+                            {{ form_row(form.conhecido2TrabalhouNaEmpresa) }}
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col text-right">
+                                    <button type="button" class="btn btn-primary btn-lg btnSalvarAnchored CV_BTN_ACTION"
+                                            data-div="divCamposConhecidosLoja" value="Salvar">
+                                        <i class="fas fa-save" aria-hidden="true"></i> Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {{ form_end(form, {'render_rest': false}) }}
+
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block down_scripts %}
+    <script src="{{ asset('build/cvForm/cv.js') }}"></script>
+{% endblock %}
