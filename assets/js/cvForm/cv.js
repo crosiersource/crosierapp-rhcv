@@ -286,7 +286,7 @@ $(document).ready(function () {
             dropzone.on("addedfile", function (file) {
                 if (file.size > (2 * 1024 * 1024)) {
                     console.log('muito grande');
-                    toastr.warning('Arquivo muito grande. Máximo: 6MB!');
+                    toastr.warning('Arquivo muito grande. Máximo: 2MB!');
                     this.removeFile(file);
                 } else {
                     $('#dz-clickable').css('display', 'none');

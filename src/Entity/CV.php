@@ -25,7 +25,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\Entity(repositoryClass="App\Repository\CVRepository")
  * @Vich\Uploadable()
  */
-class CV implements EntityId, UserInterface
+class CV implements EntityId, UserInterface, \Serializable
 {
 
     use EntityIdTrait;
@@ -500,7 +500,7 @@ class CV implements EntityId, UserInterface
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
      *
-     * @Vich\UploadableField(mapping="fotos3x4", fileNameProperty="foto")
+     * @Vich\UploadableField(mapping="cv", fileNameProperty="foto")
      *
      * @var UploadedFile
      */
@@ -1758,4 +1758,36 @@ class CV implements EntityId, UserInterface
         'C' => 'Concluído'
     ];
 
+    /**
+     * String representation of object
+     * @link https://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     * @since 5.1.0
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->cpf,
+            $this->senha
+        ));
+    }
+
+    /**
+     * Constructs the object
+     * @link https://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     * @return void
+     * @since 5.1.0
+     */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->cpf,
+            $this->senha,
+            ) = unserialize($serialized);
+    }
 }

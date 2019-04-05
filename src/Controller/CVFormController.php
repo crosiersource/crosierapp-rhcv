@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Business\CVBusiness;
 use App\Entity\CV;
-use CrosierSource\CrosierLibBaseBundle\Exception\ViewException;
 use App\Form\CVType;
+use CrosierSource\CrosierLibBaseBundle\Exception\ViewException;
 use CrosierSource\CrosierLibBaseBundle\Utils\StringUtils\ValidaCPFCNPJ;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -13,10 +13,12 @@ use Psr\Log\LoggerInterface;
 use ReCaptcha\ReCaptcha;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Vich\UploaderBundle\Handler\UploadHandler;
 
 /**
  * Class CVFormController.
@@ -43,6 +45,9 @@ class CVFormController extends AbstractController
     /** @var SessionInterface */
     private $session;
 
+    /** @var UploadHandler */
+    private $uploadHandler;
+
     /**
      * @required
      * @param mixed $cvBusiness
@@ -68,6 +73,15 @@ class CVFormController extends AbstractController
     public function setSession(SessionInterface $session): void
     {
         $this->session = $session;
+    }
+
+    /**
+     * @required
+     * @param UploadHandler $uploadHandler
+     */
+    public function setUploadHandler(UploadHandler $uploadHandler): void
+    {
+        $this->uploadHandler = $uploadHandler;
     }
 
 
@@ -377,42 +391,42 @@ class CVFormController extends AbstractController
      *
      * @Route("/cvForm/uploadFoto", name="cvForm_uploadFoto")
      * @param Request $request
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @return JsonResponse
      * @throws \Exception
      */
-    public function uploadFoto(Request $request)
+    public function uploadFoto(Request $request): JsonResponse
     {
         $output = ['uploaded' => false];
         if ($request->files->get('file')) {
             /** @var CV $cv */
             $cv = $this->getUser();
             $cv->setFotoFile($request->files->get('file'));
-            $this->getDoctrine()->getManager()->flush();
+            $this->cvBusiness->getCvEntityHandler()->save($cv);
             $output['uploaded'] = true;
         }
         return new JsonResponse($output);
+
     }
 
     /**
      *
      * @Route("/cvForm/deleteFoto", name="cvForm_deleteFoto")
      * @param Request $request
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
-    public function deleteFoto(Request $request)
+    public function deleteFoto(Request $request): RedirectResponse
     {
         try {
             $cv = $this->getUser();
-            $this->get('vich_uploader.upload_handler')->remove($cv, 'fotoFile'); // https://github.com/dustin10/VichUploaderBundle/issues/323
+            $this->uploadHandler->remove($cv, 'fotoFile'); // https://github.com/dustin10/VichUploaderBundle/issues/323
             $cv->setUpdated(new \DateTime());
             $cv->setFoto(null);
             $cv->setFotoFile(null);
-            // $this->getDoctrine()->getManager()->merge($cv);
-            $this->getDoctrine()->getManager()->flush();
-            return $this->redirectToRoute('cvForm_cv');
+            $this->cvBusiness->getCvEntityHandler()->save($cv);
         } catch (\Exception $e) {
             $this->addFlash('error', 'Ocorreu um erro ao remover a foto.');
         }
+        return $this->redirectToRoute('cvForm_cv');
     }
 
     /**

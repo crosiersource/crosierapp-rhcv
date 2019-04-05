@@ -52,17 +52,6 @@ class CVType extends AbstractType
             ));
 
 
-            $builder->add('status', ChoiceType::class, array(
-                'label' => 'Status',
-                'choices' => array(
-                    'ABERTO' => 'ABERTO',
-                    'FECHADO' => 'FECHADO',
-                    'APROVADO' => 'APROVADO',
-                    'REPROVADO' => 'REPROVADO'
-                ),
-                'required' => false
-            ));
-
             $builder->add('updated', DateType::class, array(
                 'label' => 'Data do currículo',
                 'widget' => 'single_text',
@@ -463,14 +452,6 @@ class CVType extends AbstractType
                 'label' => 'Qtde Empregos',
                 'required' => false,
                 'disabled' => $disabled
-            ));
-
-            $builder->add('avaliacao', TextareaType::class, array(
-                'label' => 'Avaliação',
-                'required' => false,
-                'attr' => array(
-                    'rows' => '15'
-                ),
             ));
 
         });
