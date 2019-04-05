@@ -378,11 +378,13 @@ class CVFormController extends AbstractController
      * @Route("/cvForm/uploadFoto", name="cvForm_uploadFoto")
      * @param Request $request
      * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Exception
      */
     public function uploadFoto(Request $request)
     {
         $output = ['uploaded' => false];
         if ($request->files->get('file')) {
+            /** @var CV $cv */
             $cv = $this->getUser();
             $cv->setFotoFile($request->files->get('file'));
             $this->getDoctrine()->getManager()->flush();

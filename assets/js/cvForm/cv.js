@@ -263,7 +263,7 @@ $(document).ready(function () {
                 {
                     previewTemplate: $('#dzTemplate').html(),
                     clickable: '#dz-clickable',
-                    url: "/uploadFoto",
+                    url: "/cvForm/uploadFoto",
                     maxFilesize: 6,
                     maxFiles: 1,
                     acceptedFiles: 'image/*',
@@ -302,7 +302,7 @@ $(document).ready(function () {
 
             window.dzRemoveAll = function () {
                 dropzone.removeAllFiles(true);
-                $.post('/deleteFoto');
+                $.post('/cvForm/deleteFoto');
             }
         }
 
