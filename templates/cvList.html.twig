@@ -38,6 +38,7 @@
                     <thead>
                     <tr>
                         <th scope="col">Id</th>
+                        <th scope="col"></th>
                         <th scope="col">Nome</th>
                         <th scope="col">Idade</th>
                         <th scope="col">Naturalidade</th>
@@ -50,6 +51,10 @@
                     {% for cv in dados %}
                         <tr>
                             <td>{{ cv.id }}</td>
+                            <td>
+                                <img src="{{ getEnv('DIR_FOTOS3x4') }}{{ cv.foto }}"
+                                     style="width: 60px; height: 80px"/>
+                            </td>
                             <td>{{ cv.nome }}</td>
                             <td class="text-right">{{ cv.idade }}</td>
                             <td>{{ cv.naturalidade }}</td>
@@ -126,7 +131,8 @@
                                         {% for status in filterChoices.status %}
                                             {% set checked = ((filter is defined) and (filter.status is defined) and (status in filter.status)) ? 'checked' : '' %}
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="{{ status }}" {{ checked }}
+                                                <input class="form-check-input" type="checkbox"
+                                                       value="{{ status }}" {{ checked }}
                                                        name="filter[status][]">
                                                 <label class="form-check-label">
                                                     {{ status }}
