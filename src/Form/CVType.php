@@ -244,7 +244,12 @@ class CVType extends AbstractType
             $builder->add('qtdeFilhos', IntegerType::class, array(
                 'label' => 'Qtde Filhos',
                 'required' => false,
-                'disabled' => $disabled
+                'disabled' => $disabled,
+                'attr' => [
+                    'min' => 0,
+                    'max' => 30
+                ]
+
             ));
 
             $builder->add('paiNome', TextType::class, array(
@@ -451,7 +456,11 @@ class CVType extends AbstractType
             $builder->add('qtdeEmpregos', IntegerType::class, array(
                 'label' => 'Qtde Empregos',
                 'required' => false,
-                'disabled' => $disabled
+                'disabled' => $disabled,
+                'attr' => [
+                    'min' => 0,
+                    'max' => 10
+                ]
             ));
 
         });

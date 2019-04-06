@@ -53,6 +53,11 @@ $(document).ready(function () {
 
     function buildCamposFilhos() {
         let qtdeFilhos = parseInt($qtdeFilhos.val());
+        if (qtdeFilhos > 30) {
+            qtdeFilhos = 30;
+            $qtdeFilhos.val(qtdeFilhos);
+        }
+
 
         let dadosFilhosJSON = JSON.parse($dadosFilhosJSON.html());
 
@@ -130,6 +135,10 @@ $(document).ready(function () {
 
     function buildCamposEmpregos() {
         let qtdeEmpregos = parseInt($qtdeEmpregos.val());
+        if (qtdeEmpregos > 10) {
+            qtdeEmpregos = 10;
+            $qtdeEmpregos.val(qtdeEmpregos);
+        }
 
         let dadosEmpregosJSON = JSON.parse($dadosEmpregosJSON.html());
         console.dir(dadosEmpregosJSON);
@@ -238,7 +247,7 @@ $(document).ready(function () {
 
     }
 
-    $qtdeEmpregos.change(function () {
+    $qtdeEmpregos.keyup(function () {
         // Adiciona dinamicamente os campos conforme a qtde de empregos
         $dadosEmpregos.html('');
         buildCamposEmpregos();
