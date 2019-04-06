@@ -18,7 +18,10 @@
                     <h2 class="text-center">Currículo</h2>
 
                     <div class="form-group row">
-                        <label class="col-form-label col-sm-2 required" for="foto">Foto (3x4)</label>
+                        <div style="width: 120px; float: left; height: 160px; border: dashed thin grey;">
+                            <img src="{{ getEnv('DIR_FOTOS3x4') }}{{ cv.foto }}"
+                                 style="width: 100%"/>
+                        </div>
 
                     </div>
 
