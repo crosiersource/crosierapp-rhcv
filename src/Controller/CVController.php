@@ -64,6 +64,7 @@ class CVController extends BaseController
         $params['filter']['atual'] = true;
         $params['filter']['emailConfirmado'] = 'S';
         $params['filter']['nomeIsNotNull'] = true;
+        $params['filter']['status'] = ['FECHADO'];
 
         $filterDatas = $this->getFilterDatas($params);
 
