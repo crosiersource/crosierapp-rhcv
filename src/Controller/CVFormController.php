@@ -350,7 +350,9 @@ class CVFormController extends AbstractController
         try {
             /** @var CV $cv */
             $cv = $this->getUser();
-            $this->cvBusiness->versionar($cv);
+            if (!$this->cvBusiness->versionar($cv)) {
+                $this->addFlash('warn', 'Não é possível versionar.');
+            }
         } catch (\Exception $e) {
             $this->addFlash('error', 'Erro ao modificar.');
         }

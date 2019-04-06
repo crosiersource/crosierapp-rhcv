@@ -129,7 +129,7 @@ class CVController extends BaseController
                 try {
                     $this->cvBusiness->getCvEntityHandler()->save($cv);
                     $this->getDoctrine()->getManager()->refresh($cv);
-                    $form = $this->createForm(CVType::class, $cv);
+                    $form = $this->createForm(CVAvaliaType::class, $cv);
                     $this->addFlash('success', 'Registro salvo com sucesso!');
                 } catch (\Throwable $e) {
                     $this->addFlash('error', 'Erro ao salvar!');

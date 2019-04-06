@@ -110,7 +110,7 @@
                                 </div>
                             </div>
 
-                        {% else %}
+                        {% elseif status == 'FECHADO' %}
 
                             <div class="form-group row" style="background-color: cornsilk; padding: 15px">
                                 <label class="col-form-label col-sm-2 required"> </label>
@@ -129,9 +129,10 @@
 
                         {% endif %}
 
+                        <hr/>
+                        
                     {% endif %}
 
-                    <hr/>
 
                     <div class="form-group row">
                         {{ form_label(form.updated) }}
