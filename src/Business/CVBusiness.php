@@ -486,6 +486,82 @@ class CVBusiness extends BaseBusiness
     }
 
 
+    /**
+     * @return int
+     */
+    public function avisarFotoFaltando(): int
+    {
+        $cvsNaoConfirmados = $this->getDoctrine()->getRepository(CV::class)->findBy(
+            [
+                'atual' => true,
+                'foto' => null,
+                'status' => 'FECHADO',
+                'emailConfirmado' => 'S'
+            ]);
+        $msg = 'Verificamos que seu currículo foi preenchido em nosso site, porém não foi enviada a foto.';
+        $msg .= '<br />';
+        $msg .= 'Lembramos que apenas currículos com foto serão enviados para a análise.';
+        $msg .= '<br />';
+        $msg .= "Se ainda for de seu interesse, por favor, acesse nosso sistema em <a href='https://cv.casabonsucesso.com.br/' target='_blank'>https://cv.casabonsucesso.com.br/</a>, clique no botão 'Abrir para edição' e envie sua foto. Após isto, clique novamente em 'Finalizar e enviar'.";
+        $msg .= '<br />';
+        $msg .= 'Obrigado!';
+
+        $assunto = 'Cadastro de Currículo - Faltando foto';
+
+        foreach ($cvsNaoConfirmados as $cvSemFoto) {
+        }
+        $body = $this->container->get('twig')->render('cvForm/emailAviso.html.twig', ['msg' => $msg]);
+        $message = (new \Swift_Message($assunto))
+            ->setFrom($_SERVER['MAILER_USERNAME'], 'Casa Bonsucesso (Mailer)')
+            ->setSubject($assunto)
+            ->setTo('carlospauluk@gmail.com')
+            ->setBody($body, 'text/html');
+        $this->swiftMailer->send($message);
+        //}
+
+        return count($cvsNaoConfirmados);
+
+
+    }
+
+
+    /**
+     * @return int
+     */
+    public function avisarNaoFechado(): int
+    {
+        $cvsNaoConfirmados = $this->getDoctrine()->getRepository(CV::class)->findBy(
+            [
+                'atual' => true,
+                'status' => 'ABERTO',
+                'emailConfirmado' => 'S'
+            ]);
+        $msg = 'Verificamos que seu currículo foi preenchido em nosso site, porém não foi finalizado.';
+        $msg .= '<br />';
+        $msg .= '(Lembramos que apenas currículos com foto serão enviados para a análise.)';
+        $msg .= '<br />';
+        $msg .= "Se ainda for de seu interesse, por favor, acesse nosso sistema em <a href='https://cv.casabonsucesso.com.br/' target='_blank'>https://cv.casabonsucesso.com.br/</a>, verifique se está tudo preenchido corretamente e clique em <b>'Finalizar e enviar'</b>.";
+        $msg .= '<br />';
+        $msg .= 'Obrigado!';
+
+        $assunto = 'Cadastro de Currículo - Não finalizado';
+
+        foreach ($cvsNaoConfirmados as $cvSemFoto) {
+        }
+        $body = $this->container->get('twig')->render('cvForm/emailAviso.html.twig', ['msg' => $msg]);
+        $message = (new \Swift_Message($assunto))
+            ->setFrom($_SERVER['MAILER_USERNAME'], 'Casa Bonsucesso (Mailer)')
+            ->setSubject($assunto)
+            ->setTo('carlospauluk@gmail.com')
+            ->setBody($body, 'text/html');
+        $this->swiftMailer->send($message);
+        //}
+
+        return count($cvsNaoConfirmados);
+
+
+    }
+
 
     /**
      * @return int

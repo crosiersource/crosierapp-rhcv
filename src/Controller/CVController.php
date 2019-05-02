@@ -168,6 +168,35 @@ class CVController extends BaseController
 
     }
 
+    /**
+     * Avisar foto faltando.
+     *
+     * @Route("/cv/avisarFotoFaltando", name="cv_avisaFotoFaltando")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function avisarFotoFaltando(Request $request): Response
+    {
+        $qtdeEnviados = $this->cvBusiness->avisarFotoFaltando();
+        return new Response('foi avisarFotoFaltando: [' . $qtdeEnviados . ']');
+
+    }
+
+
+    /**
+     * Avisar 'não fechado'.
+     *
+     * @Route("/cv/avisarNaoFechado", name="cv_avisarNaoFechado ")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function avisarNaoFechado(Request $request): Response
+    {
+        $qtdeEnviados = $this->cvBusiness->avisarNaoFechado();
+        return new Response('foi avisarNaoFechado: [' . $qtdeEnviados . ']');
+
+    }
+
 
     /**
      * Form para preenchimento do CV.
