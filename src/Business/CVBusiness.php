@@ -157,7 +157,7 @@ class CVBusiness extends BaseBusiness
         $link = $_SERVER['LINK_CONFIRM_EMAIL'] . '?cv=' . $cv->getId() . '&uuid=' . $cv->getEmailConfirmUUID();
         $body = $this->container->get('twig')->render('cvForm/emailConfirm.html.twig', ['link' => $link]);
         $message = (new \Swift_Message('Confirmação de cadastro.'))
-            ->setFrom('mailer@casabonsucesso.com.br', 'Casa Bonsucesso')
+            ->setFrom($_SERVER['MAILER_USERNAME'], 'Casa Bonsucesso (Mailer)')
             ->setSubject('Confirmação de Cadastro - Cadastro de Currículos')
             ->setTo($cv->getEmail())
             ->setBody($body, 'text/html');
@@ -195,7 +195,7 @@ class CVBusiness extends BaseBusiness
 
         $body = $this->container->get('twig')->render('cvForm/emailNovaSenha.html.twig', ['novaSenha' => $novaSenhaTemp]);
         $message = (new \Swift_Message())
-            ->setFrom('mailer@casabonsucesso.com.br', 'Casa Bonsucesso')
+            ->setFrom($_SERVER['MAILER_USERNAME'], 'Casa Bonsucesso')
             ->setSubject('Cadastro de Currículos - Nova Senha')
             ->setTo($cv->getEmail())
             ->setBody($body, 'text/html');
@@ -467,6 +467,22 @@ class CVBusiness extends BaseBusiness
             }
         }
         return json_encode($dadosEmpregosJSON);
+    }
+
+    /**
+     * @return int
+     */
+    public function reenviarEmailsNaoConfirmados(): int
+    {
+        $cvsNaoConfirmados = $this->getDoctrine()->getRepository(CV::class)->findBy(
+            [
+                'emailConfirmado' => 'N',
+                'atual' => true
+            ]);
+        foreach ($cvsNaoConfirmados as $cvNaoConfirmado) {
+            $this->enviarEmailNovo($cvNaoConfirmado);
+        }
+
     }
 
 

@@ -152,4 +152,21 @@ class CVController extends BaseController
     }
 
 
+    /**
+     * Form para preenchimento do CV.
+     *
+     * @Route("/cv/reenviarEmails", name="cv_reenviarEmails")
+     * @param Request $request
+     * @param CV $cv
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
+    public function reenviarEmails(Request $request): Response
+    {
+        $this->cvBusiness->reenviarEmailsNaoConfirmados();
+        return new Response('foi');
+
+    }
+
+
 }
