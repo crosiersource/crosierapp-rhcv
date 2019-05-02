@@ -169,4 +169,21 @@ class CVController extends BaseController
     }
 
 
+    /**
+     * Form para preenchimento do CV.
+     *
+     * @Route("/cv/testarEmail", name="cv_testarEmail")
+     * @param Request $request
+     * @param CV $cv
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
+    public function testarEmail(Request $request): Response
+    {
+        $this->cvBusiness->testarEmail();
+        return new Response('foi p/ carlospauluk@gmail.com');
+
+    }
+
+
 }

@@ -470,9 +470,9 @@ class CVBusiness extends BaseBusiness
     }
 
     /**
-     * @return int
+     * @return void
      */
-    public function reenviarEmailsNaoConfirmados(): int
+    public function reenviarEmailsNaoConfirmados(): void
     {
         $cvsNaoConfirmados = $this->getDoctrine()->getRepository(CV::class)->findBy(
             [
@@ -482,6 +482,24 @@ class CVBusiness extends BaseBusiness
         foreach ($cvsNaoConfirmados as $cvNaoConfirmado) {
             $this->enviarEmailNovo($cvNaoConfirmado);
         }
+
+    }
+
+
+
+    /**
+     * @return int
+     */
+    public function testarEmail(): int
+    {
+
+        $body = $this->container->get('twig')->render('cvForm/emailConfirm.html.twig', ['link' => 'bla']);
+        $message = (new \Swift_Message('TEstandooooooooo'))
+            ->setFrom($_SERVER['MAILER_USERNAME'], 'Casa Bonsucesso (Mailer)')
+            ->setSubject('TEstandooooooooo')
+            ->setTo('carlospauluk@gmail.com')
+            ->setBody($body, 'text/html');
+        return $this->swiftMailer->send($message);
 
     }
 
