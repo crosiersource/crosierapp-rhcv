@@ -508,16 +508,16 @@ class CVBusiness extends BaseBusiness
 
         $assunto = 'Cadastro de Currículo - Faltando foto';
 
+        /** @var CV $cvSemFoto */
         foreach ($cvsNaoConfirmados as $cvSemFoto) {
+            $body = $this->container->get('twig')->render('cvForm/emailAviso.html.twig', ['msg' => $msg]);
+            $message = (new \Swift_Message($assunto))
+                ->setFrom($_SERVER['MAILER_USERNAME'], 'Casa Bonsucesso (Mailer)')
+                ->setSubject($assunto)
+                ->setTo($cvSemFoto->getEmail())
+                ->setBody($body, 'text/html');
+            $this->swiftMailer->send($message);
         }
-        $body = $this->container->get('twig')->render('cvForm/emailAviso.html.twig', ['msg' => $msg]);
-        $message = (new \Swift_Message($assunto))
-            ->setFrom($_SERVER['MAILER_USERNAME'], 'Casa Bonsucesso (Mailer)')
-            ->setSubject($assunto)
-            ->setTo('carlospauluk@gmail.com')
-            ->setBody($body, 'text/html');
-        $this->swiftMailer->send($message);
-        //}
 
         return count($cvsNaoConfirmados);
 
@@ -530,7 +530,7 @@ class CVBusiness extends BaseBusiness
      */
     public function avisarNaoFechado(): int
     {
-        $cvsNaoConfirmados = $this->getDoctrine()->getRepository(CV::class)->findBy(
+        $cvsNaoFechados = $this->getDoctrine()->getRepository(CV::class)->findBy(
             [
                 'atual' => true,
                 'status' => 'ABERTO',
@@ -545,19 +545,18 @@ class CVBusiness extends BaseBusiness
         $msg .= 'Obrigado!';
 
         $assunto = 'Cadastro de Currículo - Não finalizado';
-
-        foreach ($cvsNaoConfirmados as $cvSemFoto) {
+        /** @var CV $cvNaoFechado */
+        foreach ($cvsNaoFechados as $cvNaoFechado) {
+            $body = $this->container->get('twig')->render('cvForm/emailAviso.html.twig', ['msg' => $msg]);
+            $message = (new \Swift_Message($assunto))
+                ->setFrom($_SERVER['MAILER_USERNAME'], 'Casa Bonsucesso (Mailer)')
+                ->setSubject($assunto)
+                ->setTo($cvNaoFechado->getEmail())
+                ->setBody($body, 'text/html');
+            $this->swiftMailer->send($message);
         }
-        $body = $this->container->get('twig')->render('cvForm/emailAviso.html.twig', ['msg' => $msg]);
-        $message = (new \Swift_Message($assunto))
-            ->setFrom($_SERVER['MAILER_USERNAME'], 'Casa Bonsucesso (Mailer)')
-            ->setSubject($assunto)
-            ->setTo('carlospauluk@gmail.com')
-            ->setBody($body, 'text/html');
-        $this->swiftMailer->send($message);
-        //}
 
-        return count($cvsNaoConfirmados);
+        return count($cvsNaoFechados);
 
 
     }
