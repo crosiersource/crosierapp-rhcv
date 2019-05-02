@@ -61,9 +61,11 @@ class CVController extends BaseController
     public function list(Request $request): Response
     {
         $params['filter'] = $request->get('filter');
+        // Fixos
         $params['filter']['atual'] = true;
         $params['filter']['emailConfirmado'] = 'S';
         $params['filter']['nomeIsNotNull'] = true;
+        
         $params['filter']['status'] = $request->get('filter')['status'] ?? ['FECHADO'];
 
         $filterDatas = $this->getFilterDatas($params);
