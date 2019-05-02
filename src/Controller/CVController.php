@@ -64,7 +64,7 @@ class CVController extends BaseController
         $params['filter']['atual'] = true;
         $params['filter']['emailConfirmado'] = 'S';
         $params['filter']['nomeIsNotNull'] = true;
-        $params['filter']['status'] = ['FECHADO'];
+        $params['filter']['status'] = $request->get('filter')['status'] ?? ['FECHADO'];
 
         $filterDatas = $this->getFilterDatas($params);
 
@@ -78,7 +78,7 @@ class CVController extends BaseController
         $vParams['filterChoices'] = $this->getFilterChoices();
         $vParams['filter'] = $params['filter'];
 
-        return $this->render('cvList.html.twig', $vParams);
+        return $this->doRender('cvList.html.twig', $vParams);
     }
 
     /**
@@ -148,7 +148,7 @@ class CVController extends BaseController
         $vParams['cv'] = $cv;
 
 
-        return $this->render('avalia.html.twig', $vParams);
+        return $this->doRender('avalia.html.twig', $vParams);
     }
 
 

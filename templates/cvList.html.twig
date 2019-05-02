@@ -37,6 +37,7 @@
 
                     <thead>
                     <tr>
+                        <th scope="col">#</th>
                         <th scope="col">Id</th>
                         <th scope="col"></th>
                         <th scope="col">Nome</th>
@@ -50,6 +51,7 @@
                     <tbody>
                     {% for cv in dados %}
                         <tr>
+                            <td>{{ loop.index }}</td>
                             <td>{{ cv.id }}</td>
                             <td>
                                 <img src="{{ getEnv('DIR_FOTOS3x4') }}{{ cv.foto }}"
