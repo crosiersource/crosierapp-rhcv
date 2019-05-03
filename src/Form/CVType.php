@@ -66,6 +66,7 @@ class CVType extends AbstractType
             $builder->add('sexo', ChoiceType::class, array(
                 'label' => 'Sexo',
                 'choices' => array(
+                    '...' => '',
                     'MASCULINO' => 'MASCULINO',
                     'FEMININO' => 'FEMININO'
                 ),
