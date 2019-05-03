@@ -51,7 +51,6 @@ class CVType extends AbstractType
                 'disabled' => $disabled
             ));
 
-
             $builder->add('updated', DateType::class, array(
                 'label' => 'Data do currículo',
                 'widget' => 'single_text',
@@ -59,6 +58,19 @@ class CVType extends AbstractType
                 'attr' => array(
                     'class' => 'crsr-datetime',
                     'readonly' => true
+                ),
+                'required' => true,
+                'disabled' => $disabled
+            ));
+
+            $builder->add('sexo', ChoiceType::class, array(
+                'label' => 'Sexo',
+                'choices' => array(
+                    'MASCULINO' => 'MASCULINO',
+                    'FEMININO' => 'FEMININO'
+                ),
+                'attr' => array(
+                    'class' => 'autoSelect2'
                 ),
                 'required' => true,
                 'disabled' => $disabled

@@ -33,11 +33,13 @@
                                          style="width: 100%"/>
                                 </div>
                                 <div>
+                                    {% if cv.status == 'ABERTO' %}
                                     <button type="button" value="Deletar" class="btn btn-warning CV_BTN_ACTION"
                                             data-url="/cvForm/deleteFoto" data-target="#confirmationModal"
                                             data-toggle="modal">
                                         <i class="fas fa-trash" aria-hidden="true"></i> Deletar
                                     </button>
+                                    {% endif %}
                                 </div>
                             </div>
 
@@ -161,6 +163,7 @@
                     {{ form_row(form.cpf) }}
                     {{ form_row(form.nome) }}
                     {{ form_row(form.email) }}
+                    {{ form_row(form.sexo) }}
 
                     {% if modoExibicao == false %}
                         <div class="form-group row">

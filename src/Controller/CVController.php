@@ -46,6 +46,7 @@ class CVController extends BaseController
             new FilterData(['cargosPretendidos'], 'IN', 'cargosPretendidos', $params),
             new FilterData(['temFilhos'], 'EQ', 'temFilhos', $params),
             new FilterData(['atual'], 'EQ', 'atual', $params),
+            new FilterData(['sexo'], 'IN', 'sexo', $params),
             new FilterData(['emailConfirmado'], 'EQ', 'emailConfirmado', $params),
             new FilterData(['nome'], 'IS_NOT_NULL', 'nomeIsNotNull', $params),
         ];
@@ -65,7 +66,7 @@ class CVController extends BaseController
         $params['filter']['atual'] = true;
         $params['filter']['emailConfirmado'] = 'S';
         $params['filter']['nomeIsNotNull'] = true;
-        
+
         $params['filter']['status'] = $request->get('filter')['status'] ?? ['FECHADO'];
 
         $filterDatas = $this->getFilterDatas($params);

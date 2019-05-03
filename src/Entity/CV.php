@@ -55,6 +55,13 @@ class CV implements EntityId, UserInterface, \Serializable
     private $dtNascimento;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="sexo", type="string", length=20, nullable=false)
+     */
+    private $sexo;
+
+    /**
      * Transient.
      *
      * @var integer
@@ -606,6 +613,24 @@ class CV implements EntityId, UserInterface, \Serializable
     public function setDtNascimento(?DateTime $dtNascimento): void
     {
         $this->dtNascimento = $dtNascimento;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSexo(): string
+    {
+        return $this->sexo;
+    }
+
+    /**
+     * @param string $sexo
+     * @return CV
+     */
+    public function setSexo(string $sexo): CV
+    {
+        $this->sexo = $sexo;
+        return $this;
     }
 
     public function getIdade()
