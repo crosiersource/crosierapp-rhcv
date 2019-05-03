@@ -55,9 +55,9 @@ class CV implements EntityId, UserInterface, \Serializable
     private $dtNascimento;
 
     /**
-     * @var string
+     * @var null|string
      *
-     * @ORM\Column(name="sexo", type="string", length=20, nullable=false)
+     * @ORM\Column(name="sexo", type="string", length=20, nullable=true)
      */
     private $sexo;
 
@@ -618,7 +618,7 @@ class CV implements EntityId, UserInterface, \Serializable
     /**
      * @return string
      */
-    public function getSexo(): string
+    public function getSexo(): ?string
     {
         return $this->sexo;
     }
@@ -627,7 +627,7 @@ class CV implements EntityId, UserInterface, \Serializable
      * @param string $sexo
      * @return CV
      */
-    public function setSexo(string $sexo): CV
+    public function setSexo(?string $sexo): CV
     {
         $this->sexo = $sexo;
         return $this;
