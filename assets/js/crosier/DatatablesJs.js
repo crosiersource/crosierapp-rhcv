@@ -25,9 +25,10 @@ class DatatablesJs {
                 },
                 searching: false,
                 columns: columns,
-                "language": {
+                language: {
                     "url": "/build/static/datatables-Portuguese-Brasil.json"
-                }
+                },
+                order: [[ columns.length - 1, "desc" ]]
             };
 
             // console.dir(defaultParams);
@@ -39,6 +40,7 @@ class DatatablesJs {
             datatable.on('draw', function () {
                 $('[data-toggle="tooltip"]').tooltip();
                 CrosierMasks.maskAll();
+                Pace.restart();
             });
 
         });
@@ -46,13 +48,13 @@ class DatatablesJs {
 
     static makeEditButton(editUrl) {
         return '<button type="button" class="btn btn-primary btn-sm" onclick="window.location.href=\'' + editUrl + '\'">' +
-            '<i class="fas fa-wrench" aria-hidden="true"></i></button>';
+            '<i class="fas fa-wrench" aria-hidden="true"></i></button> ';
     }
 
     static makeDeleteButton(deleteUrl, csrfTokenDelete) {
         return '<button type="button" class="btn btn-danger btn-sm" data-url="' + deleteUrl + '" ' +
             'data-token="' + csrfTokenDelete + '" data-target="#confirmationModal" data-toggle="modal">' +
-            '<i class="fa fa-trash" aria-hidden="true"></i></button>';
+            '<i class="fa fa-trash" aria-hidden="true"></i></button> ';
     }
 
 }
