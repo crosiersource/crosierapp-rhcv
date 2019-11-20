@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\CV;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -23,7 +23,7 @@ class CVAvaliaType extends AbstractType
 {
     private $doctrine;
 
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(EntityManagerInterface $doctrine)
     {
         $this->doctrine = $doctrine;
     }
