@@ -117,7 +117,7 @@ class CVBusiness extends BaseBusiness
     public function novo($cpf, $email, $senha): void
     {
         try {
-            $this->getDoctrine()->getEntityManager()->beginTransaction();
+            $this->getDoctrine()->beginTransaction();
             $cv = $this->getDoctrine()->getRepository(CV::class)->findOneBy(['cpf' => $cpf]);
             if ($cv) {
                 throw new \RuntimeException('CPF já cadastrado');
@@ -142,9 +142,9 @@ class CVBusiness extends BaseBusiness
             if (!$this->enviarEmailNovo($cv)) {
                 throw new \RuntimeException('Não foi possível enviar o e-mail de confirmação.');
             }
-            $this->getDoctrine()->getEntityManager()->commit();
+            $this->getDoctrine()->commit();
         } catch (\Exception $e) {
-            $this->getDoctrine()->getEntityManager()->rollback();
+            $this->getDoctrine()->rollback();
             throw $e;
         }
     }
@@ -191,7 +191,7 @@ class CVBusiness extends BaseBusiness
         $hashed = $passwordEncoder->encodePassword($cv, $novaSenhaTemp);
         $cv->setSenhaTemp($hashed);
         $cv->setUpdated(new \DateTime());
-        $this->getDoctrine()->getEntityManager()->flush();
+        $this->getDoctrine()->flush();
 
 
         $body = $this->container->get('twig')->render('cvForm/emailNovaSenha.html.twig', ['novaSenha' => $novaSenhaTemp]);
@@ -220,7 +220,7 @@ class CVBusiness extends BaseBusiness
             return null;
         }
         $cv->setEmailConfirmado('S');
-        $this->getDoctrine()->getEntityManager()->flush();
+        $this->getDoctrine()->flush();
         return $cv;
     }
 
@@ -298,24 +298,24 @@ class CVBusiness extends BaseBusiness
             $novoCv->setFilhos($filhos);
             $novoCv->setExperProfis($experProfi);
 
-            $this->getDoctrine()->getEntityManager()->persist($novoCv);
+            $this->getDoctrine()->persist($novoCv);
 
             foreach ($cv->getFilhos() as $filho) {
                 $novoFilho = clone $filho;
                 $novoFilho->setCv($novoCv);
                 $novoFilho->setInserted(new \DateTime());
                 $novoFilho->setUpdated(new \DateTime());
-                $this->getDoctrine()->getEntityManager()->persist($novoFilho);
+                $this->getDoctrine()->persist($novoFilho);
             }
             foreach ($cv->getExperProfis() as $experProfi) {
                 $novaExperProfi = clone $experProfi;
                 $novaExperProfi->setCv($novoCv);
                 $novaExperProfi->setInserted(new \DateTime());
                 $novaExperProfi->setUpdated(new \DateTime());
-                $this->getDoctrine()->getEntityManager()->persist($novaExperProfi);
+                $this->getDoctrine()->persist($novaExperProfi);
             }
 
-            $this->getDoctrine()->getEntityManager()->flush();
+            $this->getDoctrine()->flush();
 
             return true;
 
@@ -336,13 +336,13 @@ class CVBusiness extends BaseBusiness
             if ($cv->getTemFilhos() === 'N') {
                 $cv->setQtdeFilhos(null);
                 $cv->getFilhos()->clear();
-                $this->getDoctrine()->getEntityManager()->flush();
+                $this->getDoctrine()->flush();
                 return $cv;
             }
 
             if ($arrFilhos && count($arrFilhos) > 0) {
                 $cv->getFilhos()->clear();
-                $this->getDoctrine()->getEntityManager()->flush();
+                $this->getDoctrine()->flush();
                 foreach ($arrFilhos as $filho) {
                     if (!$filho['nome']) {
                         continue;
@@ -361,10 +361,10 @@ class CVBusiness extends BaseBusiness
                     $cvFilho->setInserted(new \DateTime('now'));
                     $cvFilho->setUpdated(new \DateTime('now'));
 
-                    $this->getDoctrine()->getEntityManager()->persist($cvFilho);
+                    $this->getDoctrine()->persist($cvFilho);
                 }
-                $this->getDoctrine()->getEntityManager()->flush();
-                $this->getDoctrine()->getEntityManager()->refresh($cv);
+                $this->getDoctrine()->flush();
+                $this->getDoctrine()->refresh($cv);
                 return $cv;
             }
             return null;
@@ -405,7 +405,7 @@ class CVBusiness extends BaseBusiness
         try {
             if ($arrEmpregos && count($arrEmpregos) > 0) {
                 $cv->getExperProfis()->clear();
-                $this->getDoctrine()->getEntityManager()->flush();
+                $this->getDoctrine()->flush();
 
                 foreach ($arrEmpregos as $emprego) {
                     if ($emprego['nomeEmpresa']) {
@@ -431,11 +431,11 @@ class CVBusiness extends BaseBusiness
                         $cvExperProfiss->setInserted(new \DateTime('now'));
                         $cvExperProfiss->setUpdated(new \DateTime('now'));
 
-                        $this->getDoctrine()->getEntityManager()->persist($cvExperProfiss);
-                        $this->getDoctrine()->getEntityManager()->flush();
+                        $this->getDoctrine()->persist($cvExperProfiss);
+                        $this->getDoctrine()->flush();
                     }
                 }
-                $this->getDoctrine()->getEntityManager()->refresh($cv);
+                $this->getDoctrine()->refresh($cv);
                 return $cv;
             }
             return null;

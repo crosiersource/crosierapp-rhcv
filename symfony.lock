@@ -1,0 +1,8 @@
+{
+    "roave/security-advisories": {
+        "version": "dev-master"
+    },
+    "symfony/error-handler": {
+        "version": "v4.4.1"
+    }
+}
