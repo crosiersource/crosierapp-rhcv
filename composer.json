@@ -48,6 +48,7 @@
         "google/recaptcha": "^1.2"
     },
     "require-dev": {
+	"roave/security-advisories": "dev-master",
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "^1.0",
         "symfony/profiler-pack": "*",
@@ -96,7 +97,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.3.*"
+            "require": "4.*"
         }
     },
     "repositories": [
