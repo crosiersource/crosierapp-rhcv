@@ -5,8 +5,8 @@ namespace App\Form;
 use App\Entity\Cargo;
 use App\Entity\CV;
 use CrosierSource\CrosierLibBaseBundle\Utils\RepositoryUtils\WhereBuilder;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -28,7 +28,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class CVType extends AbstractType
 {
-    private $doctrine;
+    private EntityManagerInterface $doctrine;
 
     public function __construct(EntityManagerInterface $doctrine)
     {
@@ -55,6 +55,7 @@ class CVType extends AbstractType
                 'label' => 'Data do currículo',
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy HH:mm',
+                'html5' => false,
                 'attr' => array(
                     'class' => 'crsr-datetime',
                     'readonly' => true
@@ -80,7 +81,7 @@ class CVType extends AbstractType
             $builder->add('cargosPretendidos', EntityType::class, array(
                 'label' => 'Cargos pretendidos',
                 'class' => Cargo::class,
-                'choices' => $this->doctrine->getRepository(Cargo::class)->findAll(WhereBuilder::buildOrderBy('cargo')),
+                'choices' => $this->doctrine->getRepository(Cargo::class)->findBy(null, WhereBuilder::buildOrderBy('cargo')),
                 'multiple' => true,
                 'choice_label' => 'cargo',
                 'expanded' => false,
@@ -120,9 +121,10 @@ class CVType extends AbstractType
                 'required' => false,
                 'format' => 'dd/MM/yyyy',
                 'label' => 'Dt Nascimento',
-                'attr' => array(
+                'html5' => false,
+                'attr' => [
                     'class' => 'crsr-date'
-                ),
+                ],
                 'disabled' => $disabled
             ));
 
