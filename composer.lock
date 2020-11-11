@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dfc552dda9f54253206779db0a6da3a0",
+    "content-hash": "b83144140cf2e04cf20b7a6b69263d0b",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -129,70 +129,6 @@
                 }
             ],
             "description": "Pacote base do Crosier",
-            "transport-options": {
-                "symlink": true
-            }
-        },
-        {
-            "name": "crosiersource/crosierlib-radx",
-            "version": "dev-master",
-            "dist": {
-                "type": "path",
-                "url": "../crosierlib-radx",
-                "reference": "b9b70cc8800350f55103e0fe0bb5daa48b9f22be"
-            },
-            "require": {
-                "crosiersource/crosierlib-base": "@dev",
-                "econea/nusoap": "^0.9.7",
-                "ext-bcmath": "*",
-                "ext-ctype": "*",
-                "ext-curl": "*",
-                "ext-iconv": "*",
-                "ext-intl": "*",
-                "ext-json": "*",
-                "ext-simplexml": "*",
-                "ext-soap": "*",
-                "ext-zip": "*",
-                "nfephp-org/sped-common": "^5.0",
-                "nfephp-org/sped-da": "^0",
-                "nfephp-org/sped-nfe": "^5.0",
-                "php": "7.4.*",
-                "php-http/guzzle6-adapter": "^1.1",
-                "scienta/doctrine-json-functions": "~4.1",
-                "symfony/cache": "5.1.*",
-                "symfony/console": "5.1.*",
-                "symfony/debug-bundle": "5.1.*",
-                "symfony/form": "5.1.*",
-                "symfony/messenger": "^5.1",
-                "symfony/monolog-bundle": "^3.0",
-                "symfony/orm-pack": "1.*",
-                "symfony/security-bundle": "5.1.*",
-                "symfony/serializer-pack": "1.*",
-                "symfony/validator": "5.1.*",
-                "twig/extensions": "^1.5",
-                "vich/uploader-bundle": "^1.13"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "CrosierSource\\CrosierLibRadxBundle\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Tests\\": "tests/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Carlos Eduardo Pauluk",
-                    "email": "carlospauluk@gmail.com"
-                }
-            ],
-            "description": "Bundle para o CrosierApp Radx",
             "transport-options": {
                 "symlink": true
             }
@@ -11108,8 +11044,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "crosiersource/crosierlib-base": 20,
-        "crosiersource/crosierlib-radx": 20
+        "crosiersource/crosierlib-base": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
