@@ -7,6 +7,7 @@ import routes from '../static/fos_js_routes.json';
 import Routing from '../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
 
 import Moment from 'moment';
+Moment.locale('pt-BR');
 
 Routing.setRoutingData(routes)
 
