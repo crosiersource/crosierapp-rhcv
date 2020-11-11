@@ -81,7 +81,7 @@ class CVType extends AbstractType
             $builder->add('cargosPretendidos', EntityType::class, array(
                 'label' => 'Cargos pretendidos',
                 'class' => Cargo::class,
-                'choices' => $this->doctrine->getRepository(Cargo::class)->findBy(null, WhereBuilder::buildOrderBy('cargo')),
+                'choices' => $this->doctrine->getRepository(Cargo::class)->findBy([], WhereBuilder::buildOrderBy('cargo')),
                 'multiple' => true,
                 'choice_label' => 'cargo',
                 'expanded' => false,
