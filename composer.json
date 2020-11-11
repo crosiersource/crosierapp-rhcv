@@ -56,7 +56,6 @@
     "symfony/webpack-encore-bundle": "^1.0",
     "symfony/yaml": "5.1.*",
     "crosiersource/crosierlib-base": "@dev",
-    "crosiersource/crosierlib-radx": "@dev",
     "symfony/web-profiler-bundle": "5.1.*",
     "nfephp-org/sped-common": "^5.0",
     "nfephp-org/sped-da": "^0",
