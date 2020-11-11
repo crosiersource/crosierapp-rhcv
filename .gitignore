@@ -28,3 +28,9 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 /sql/sensitive*
+
+
+assets/static/fos_js_routes.json
+src/Entity/uppercaseFields.json
+
+/public/images/*
