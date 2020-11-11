@@ -7,8 +7,6 @@ use App\Entity\CV;
 use App\Form\CVType;
 use CrosierSource\CrosierLibBaseBundle\Exception\ViewException;
 use CrosierSource\CrosierLibBaseBundle\Utils\StringUtils\ValidaCPFCNPJ;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
 use ReCaptcha\ReCaptcha;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,17 +34,13 @@ use Vich\UploaderBundle\Handler\UploadHandler;
 class CVFormController extends AbstractController
 {
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
-    /** @var CVBusiness */
-    private $cvBusiness;
+    private CVBusiness $cvBusiness;
 
-    /** @var SessionInterface */
-    private $session;
+    private SessionInterface $session;
 
-    /** @var UploadHandler */
-    private $uploadHandler;
+    private UploadHandler $uploadHandler;
 
     /**
      * @required
@@ -91,8 +85,6 @@ class CVFormController extends AbstractController
      * @Route("/cvForm/checkCPF", name="cvForm_checkCPF")
      * @param Request $request
      * @return Response
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @throws ViewException
      */
     public function checkCPF(Request $request): Response
@@ -123,7 +115,7 @@ class CVFormController extends AbstractController
 
                 $this->session->set('cpf', $vParams['cpf']);
                 /** @var CV $cv */
-                $cv = $this->cvBusiness->getDoctrine()->getRepository(CV::class)->findBy(['cpf' => $vParams['cpf']]);
+                $cv = $this->getDoctrine()->getRepository(CV::class)->findBy(['cpf' => $vParams['cpf']]);
                 // Se não tem cadastro, redireciona para a página de cadastro
                 if (!$cv) {
                     return $this->redirectToRoute('cvForm_novo');
@@ -145,7 +137,7 @@ class CVFormController extends AbstractController
     /**
      *
      * @Route("/cvForm/login", name="cvForm_login")
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function login(): Response
     {
@@ -159,10 +151,9 @@ class CVFormController extends AbstractController
     /**
      *
      * @Route("/cvForm/esqueciMinhaSenha", name="cvForm_esqueciMinhaSenha")
-     * @param $vParams
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
-    public function esqueciMinhaSenha(Request $request): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function esqueciMinhaSenha(): RedirectResponse
     {
         try {
             $cpf = $this->session->get('cpf');
@@ -227,7 +218,7 @@ class CVFormController extends AbstractController
      *
      * @Route("/cvForm/confirmEmail", name="cvForm_confirmEmail")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function confirmEmail(Request $request): Response
     {
@@ -261,7 +252,7 @@ class CVFormController extends AbstractController
     {
         /** @var CV $logged */
         $logged = parent::getUser();
-        return $this->getDoctrine()->getRepository(CV::class)->findOneBy(['cpf' => $logged->getCpf()], ['versao' => 'DESC']);
+        return $this->getDoctrine()->getRepository(CV::class)->findOneBy(['cpf' => $logged->getCpf()]);
     }
 
 
@@ -270,13 +261,12 @@ class CVFormController extends AbstractController
      *
      * @Route("/cvForm/cv", name="cvForm_cv")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cv(Request $request): Response
     {
         $vParams = [];
 
-        /** @var CV $cv */
         $cv = $this->getUser();
 
         $form = $this->createForm(CVType::class, $cv);
@@ -323,13 +313,11 @@ class CVFormController extends AbstractController
      * "Fecha" a versão do CV.
      *
      * @Route("/cvForm/fechar", name="cvForm_fechar")
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function fechar(Request $request): Response
+    public function fechar(): Response
     {
         try {
-            /** @var CV $cv */
             $cv = $this->getUser();
             $this->cvBusiness->fechar($cv);
         } catch (\Exception $e) {
@@ -342,13 +330,11 @@ class CVFormController extends AbstractController
      * Abre uma nova versão do CV.
      *
      * @Route("/cvForm/versionar", name="cvForm_versionar")
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function versionar(Request $request): Response
+    public function versionar(): Response
     {
         try {
-            /** @var CV $cv */
             $cv = $this->getUser();
             if (!$this->cvBusiness->versionar($cv)) {
                 $this->addFlash('warn', 'Não é possível versionar.');
@@ -364,9 +350,9 @@ class CVFormController extends AbstractController
      *
      * @Route("/cvForm/alterarSenha", name="cvForm_alterarSenha")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      * @throws \Doctrine\ORM\ORMEx ception
-     * @throws \CrosierSource\CrosierLibBaseBundle\Exception\ViewException
+     * @throws ViewException
      */
     public function alterarSenha(Request $request): Response
     {
@@ -400,7 +386,6 @@ class CVFormController extends AbstractController
     {
         $output = ['uploaded' => false];
         if ($request->files->get('file')) {
-            /** @var CV $cv */
             $cv = $this->getUser();
             $cv->setFotoFile($request->files->get('file'));
             $this->cvBusiness->getCvEntityHandler()->save($cv);
@@ -413,10 +398,9 @@ class CVFormController extends AbstractController
     /**
      *
      * @Route("/cvForm/deleteFoto", name="cvForm_deleteFoto")
-     * @param Request $request
      * @return RedirectResponse
      */
-    public function deleteFoto(Request $request): RedirectResponse
+    public function deleteFoto(): RedirectResponse
     {
         try {
             $cv = $this->getUser();

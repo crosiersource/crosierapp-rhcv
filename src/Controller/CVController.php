@@ -6,7 +6,6 @@ use App\Business\CVBusiness;
 use App\Entity\Cargo;
 use App\Entity\CV;
 use App\Form\CVAvaliaType;
-use App\Form\CVType;
 use CrosierSource\CrosierLibBaseBundle\Controller\BaseController;
 use CrosierSource\CrosierLibBaseBundle\Repository\FilterRepository;
 use CrosierSource\CrosierLibBaseBundle\Utils\RepositoryUtils\FilterData;
@@ -23,8 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CVController extends BaseController
 {
 
-    /** @var CVBusiness */
-    private $cvBusiness;
+    private CVBusiness $cvBusiness;
 
     /**
      * @required
@@ -56,7 +54,7 @@ class CVController extends BaseController
      *
      * @Route("/cv/list/", name="cv_list")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      * @throws \Exception
      */
     public function list(Request $request): Response
@@ -95,7 +93,7 @@ class CVController extends BaseController
 
         /** @var CarteiraRepository $repoCarteira */
         $repoCargo = $this->getDoctrine()->getRepository(Cargo::class);
-        $cargos = $repoCargo->findAll(WhereBuilder::buildOrderBy('cargo'));
+        $cargos = $repoCargo->findBy(null, WhereBuilder::buildOrderBy('cargo'));
         $filterChoices['cargos'] = $cargos;
 
         $filterChoices['status'] = [
@@ -116,7 +114,7 @@ class CVController extends BaseController
      * @Route("/cv/avalia/{cv}", name="cv_avalia", defaults={"cv"=null}, requirements={"cv"="\d+"})
      * @param Request $request
      * @param CV $cv
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      * @throws \Exception
      */
     public function avaliar(Request $request, CV $cv): Response
@@ -159,12 +157,10 @@ class CVController extends BaseController
      * Form para preenchimento do CV.
      *
      * @Route("/cv/reenviarEmails", name="cv_reenviarEmails")
-     * @param Request $request
-     * @param CV $cv
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      * @throws \Exception
      */
-    public function reenviarEmails(Request $request): Response
+    public function reenviarEmails(): Response
     {
         $this->cvBusiness->reenviarEmailsNaoConfirmados();
         return new Response('foi');
@@ -175,10 +171,9 @@ class CVController extends BaseController
      * Avisar foto faltando.
      *
      * @Route("/cv/avisarFotoFaltando", name="cv_avisaFotoFaltando")
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function avisarFotoFaltando(Request $request): Response
+    public function avisarFotoFaltando(): Response
     {
         $qtdeEnviados = $this->cvBusiness->avisarFotoFaltando();
         return new Response('foi avisarFotoFaltando: [' . $qtdeEnviados . ']');
@@ -190,10 +185,9 @@ class CVController extends BaseController
      * Avisar 'não fechado'.
      *
      * @Route("/cv/avisarNaoFechado", name="cv_avisarNaoFechado ")
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function avisarNaoFechado(Request $request): Response
+    public function avisarNaoFechado(): Response
     {
         $qtdeEnviados = $this->cvBusiness->avisarNaoFechado();
         return new Response('foi avisarNaoFechado: [' . $qtdeEnviados . ']');
@@ -205,12 +199,10 @@ class CVController extends BaseController
      * Form para preenchimento do CV.
      *
      * @Route("/cv/testarEmail", name="cv_testarEmail")
-     * @param Request $request
-     * @param CV $cv
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      * @throws \Exception
      */
-    public function testarEmail(Request $request): Response
+    public function testarEmail(): Response
     {
         $this->cvBusiness->testarEmail();
         return new Response('foi p/ carlospauluk@gmail.com');
