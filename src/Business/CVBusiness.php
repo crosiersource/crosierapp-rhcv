@@ -16,24 +16,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
- * Class CVBusiness
- * @package App\Business
  * @author Carlos Eduardo Pauluk
  */
-class CVBusiness extends BaseBusiness
+class CVBusiness
 {
 
-    /** @var Swift_Mailer */
-    private $swiftMailer;
+    private Swift_Mailer $swiftMailer;
 
-    /** @var ContainerInterface */
-    private $container;
+    private ContainerInterface $container;
 
-    /** @var UserPasswordEncoderInterface */
-    private $userPasswordEncoder;
+    private UserPasswordEncoderInterface $userPasswordEncoder;
 
-    /** @var CVEntityHandler */
-    private $cvEntityHandler;
+    private CVEntityHandler $cvEntityHandler;
 
     /**
      * @required
