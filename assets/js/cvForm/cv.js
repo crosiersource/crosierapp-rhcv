@@ -9,8 +9,6 @@ import Numeral from 'numeral';
 import 'numeral/locales/pt-br.js';
 Numeral.locale('pt-br');
 
-import CrosierMasks from '../crosier/CrosierMasks';
-
 import toastr from 'toastr';
 
 $(document).ready(function () {

@@ -2,14 +2,12 @@
 
 let listId = "#cvList";
 
-import DatatablesJs from './crosier/DatatablesJs';
-
 import routes from '../static/fos_js_routes.json';
 import Routing from '../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min.js';
 
 import Moment from 'moment';
 
-Routing.setRoutingData(routes)
+Routing.setRoutingData(routes);
 
 function getDatatablesColumns() {
     return [
@@ -50,9 +48,8 @@ function getDatatablesColumns() {
             render: function (data, type, row) {
                 let colHtml = "";
                 if ($(listId).data('routeedit')) {
-                    let routeedit = $(listId).data('routeedit');
-                    let editUrl = routeedit + '/' + data.id;
-                    colHtml += DatatablesJs.makeEditButton(editUrl);
+                    let routeedit = Routing.generate($(listId).data('routeedit'), {id: data.id});
+                    colHtml += DatatablesJs.makeEditButton(routeedit);
                 }
                 if ($(listId).data('routedelete')) {
                     let deleteUrl = Routing.generate($(listId).data('routedelete'), {id: data.id});

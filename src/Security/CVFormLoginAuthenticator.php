@@ -3,9 +3,7 @@
 namespace App\Security;
 
 use App\EntityHandler\CVEntityHandler;
-use App\EntityHandler\Security\UserEntityHandler;
 use App\Repository\CVRepository;
-use CrosierSource\CrosierLibBaseBundle\Repository\Security\UserRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,13 +36,13 @@ class CVFormLoginAuthenticator extends AbstractFormLoginAuthenticator
     /** @var CVRepository */
     private $cvRepository;
 
-    /** @var RouterInterface  */
+    /** @var RouterInterface */
     private $router;
 
-    /** @var CsrfTokenManagerInterface  */
+    /** @var CsrfTokenManagerInterface */
     private $csrfTokenManager;
 
-    /** @var UserPasswordEncoderInterface  */
+    /** @var UserPasswordEncoderInterface */
     private $passwordEncoder;
 
     /** @var CVEntityHandler */
