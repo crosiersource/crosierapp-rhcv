@@ -10,7 +10,6 @@ use CrosierSource\CrosierLibBaseBundle\Business\BaseBusiness;
 use CrosierSource\CrosierLibBaseBundle\Exception\ViewException;
 use CrosierSource\CrosierLibBaseBundle\Utils\DateTimeUtils\DateTimeUtils;
 use CrosierSource\CrosierLibBaseBundle\Utils\StringUtils\StringUtils;
-use Doctrine\ORM\ORMException;
 use Swift_Mailer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -84,7 +83,7 @@ class CVBusiness
     public function checkEmailConfirmado($cpf): bool
     {
         /** @var CV $cv */
-        $cv = $this->getDoctrine()->getRepository(CV::class)->findOneBy(['cpf' => $cpf]);
+        $cv = $this->cvEntityHandler->getDoctrine()->getRepository(CV::class)->findOneBy(['cpf' => $cpf]);
         if ($cv) {
             if ($cv->getEmailConfirmado() === 'S') {
                 return true;
@@ -111,12 +110,12 @@ class CVBusiness
     public function novo($cpf, $email, $senha): void
     {
         try {
-            $this->getDoctrine()->beginTransaction();
-            $cv = $this->getDoctrine()->getRepository(CV::class)->findOneBy(['cpf' => $cpf]);
+            $this->cvEntityHandler->getDoctrine()->beginTransaction();
+            $cv = $this->cvEntityHandler->getDoctrine()->getRepository(CV::class)->findOneBy(['cpf' => $cpf]);
             if ($cv) {
                 throw new \RuntimeException('CPF já cadastrado');
             }
-            $cv = $this->getDoctrine()->getRepository(CV::class)->findOneBy(['email' => $email]);
+            $cv = $this->cvEntityHandler->getDoctrine()->getRepository(CV::class)->findOneBy(['email' => $email]);
             if ($cv) {
                 throw new \RuntimeException('E-mail já cadastrado');
             }
@@ -130,15 +129,15 @@ class CVBusiness
             $cv->setEmailConfirmUUID(md5(uniqid(mt_rand(), true)));
             try {
                 $this->cvEntityHandler->save($cv);
-            } catch (ORMException $e) {
+            } catch (\Throwable $e) {
                 throw new \RuntimeException('Erro ao salvar novo registro', 0, $e);
             }
             if (!$this->enviarEmailNovo($cv)) {
                 throw new \RuntimeException('Não foi possível enviar o e-mail de confirmação.');
             }
-            $this->getDoctrine()->commit();
+            $this->cvEntityHandler->getDoctrine()->commit();
         } catch (\Exception $e) {
-            $this->getDoctrine()->rollback();
+            $this->cvEntityHandler->getDoctrine()->rollback();
             throw $e;
         }
     }
@@ -167,7 +166,7 @@ class CVBusiness
     public function reenviarSenha($cpf): int
     {
         /** @var CV $cv */
-        $cvs = $this->getDoctrine()->getRepository(CV::class)->findBy(['cpf' => $cpf], ['versao' => 'DESC']);
+        $cvs = $this->cvEntityHandler->getDoctrine()->getRepository(CV::class)->findBy(['cpf' => $cpf], ['versao' => 'DESC']);
         $cv = $cvs ? $cvs[0] : null;
         if (!$cv) {
             throw new \RuntimeException('Cadastro não encontrado.');
@@ -185,7 +184,7 @@ class CVBusiness
         $hashed = $passwordEncoder->encodePassword($cv, $novaSenhaTemp);
         $cv->setSenhaTemp($hashed);
         $cv->setUpdated(new \DateTime());
-        $this->getDoctrine()->flush();
+        $this->cvEntityHandler->getDoctrine()->flush();
 
 
         $body = $this->container->get('twig')->render('cvForm/emailNovaSenha.html.twig', ['novaSenha' => $novaSenhaTemp]);
@@ -203,18 +202,16 @@ class CVBusiness
      * @param $cvId
      * @param $uuid
      * @return null|CV
-     * @throws ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function confirmEmail($cvId, $uuid): ?CV
     {
         /** @var CV $cv */
-        $cv = $this->getDoctrine()->getRepository(CV::class)->find($cvId);
+        $cv = $this->cvEntityHandler->getDoctrine()->getRepository(CV::class)->find($cvId);
         if (!$cv || $cv->getEmailConfirmUUID() !== $uuid) {
             return null;
         }
         $cv->setEmailConfirmado('S');
-        $this->getDoctrine()->flush();
+        $this->cvEntityHandler->getDoctrine()->flush();
         return $cv;
     }
 
@@ -222,7 +219,7 @@ class CVBusiness
      * @param CV $cv
      * @param $senhaAtual
      * @param $novaSenha
-     * @throws \CrosierSource\CrosierLibBaseBundle\Exception\ViewException
+     * @throws ViewException
      */
     public function alterarSenha(CV $cv, $senhaAtual, $novaSenha): void
     {
@@ -267,7 +264,7 @@ class CVBusiness
 
             // Verifica qual é o último CV. Se ainda estiver aberto, não tem pq versionar.
             /** @var CV $ultimoCv */
-            $ultimoCv = $this->getDoctrine()->getRepository(CV::class)->findBy(['cpf' => $cv->getCpf()], ['versao' => 'DESC']);
+            $ultimoCv = $this->cvEntityHandler->getDoctrine()->getRepository(CV::class)->findBy(['cpf' => $cv->getCpf()], ['versao' => 'DESC']);
             if (!$ultimoCv) {
                 throw new \RuntimeException('Cadastro não encontrado.');
             }
@@ -292,28 +289,28 @@ class CVBusiness
             $novoCv->setFilhos($filhos);
             $novoCv->setExperProfis($experProfi);
 
-            $this->getDoctrine()->persist($novoCv);
+            $this->cvEntityHandler->getDoctrine()->persist($novoCv);
 
             foreach ($cv->getFilhos() as $filho) {
                 $novoFilho = clone $filho;
                 $novoFilho->setCv($novoCv);
                 $novoFilho->setInserted(new \DateTime());
                 $novoFilho->setUpdated(new \DateTime());
-                $this->getDoctrine()->persist($novoFilho);
+                $this->cvEntityHandler->getDoctrine()->persist($novoFilho);
             }
             foreach ($cv->getExperProfis() as $experProfi) {
                 $novaExperProfi = clone $experProfi;
                 $novaExperProfi->setCv($novoCv);
                 $novaExperProfi->setInserted(new \DateTime());
                 $novaExperProfi->setUpdated(new \DateTime());
-                $this->getDoctrine()->persist($novaExperProfi);
+                $this->cvEntityHandler->getDoctrine()->persist($novaExperProfi);
             }
 
-            $this->getDoctrine()->flush();
+            $this->cvEntityHandler->getDoctrine()->flush();
 
             return true;
 
-        } catch (ORMException $e) {
+        } catch (\Throwable $e) {
             throw new \RuntimeException('Erro ao gerar nova versão. Por favor, informe este problema através do e-mail casabonsucesso@gmail.com .');
         }
     }
@@ -330,13 +327,13 @@ class CVBusiness
             if ($cv->getTemFilhos() === 'N') {
                 $cv->setQtdeFilhos(null);
                 $cv->getFilhos()->clear();
-                $this->getDoctrine()->flush();
+                $this->cvEntityHandler->getDoctrine()->flush();
                 return $cv;
             }
 
             if ($arrFilhos && count($arrFilhos) > 0) {
                 $cv->getFilhos()->clear();
-                $this->getDoctrine()->flush();
+                $this->cvEntityHandler->getDoctrine()->flush();
                 foreach ($arrFilhos as $filho) {
                     if (!$filho['nome']) {
                         continue;
@@ -355,14 +352,14 @@ class CVBusiness
                     $cvFilho->setInserted(new \DateTime('now'));
                     $cvFilho->setUpdated(new \DateTime('now'));
 
-                    $this->getDoctrine()->persist($cvFilho);
+                    $this->cvEntityHandler->getDoctrine()->persist($cvFilho);
                 }
-                $this->getDoctrine()->flush();
-                $this->getDoctrine()->refresh($cv);
+                $this->cvEntityHandler->getDoctrine()->flush();
+                $this->cvEntityHandler->getDoctrine()->refresh($cv);
                 return $cv;
             }
             return null;
-        } catch (ORMException $e) {
+        } catch (\Throwable $e) {
             throw new \RuntimeException('Erro ao salvar dados dos filhos.');
         }
     }
@@ -399,7 +396,7 @@ class CVBusiness
         try {
             if ($arrEmpregos && count($arrEmpregos) > 0) {
                 $cv->getExperProfis()->clear();
-                $this->getDoctrine()->flush();
+                $this->cvEntityHandler->getDoctrine()->flush();
 
                 foreach ($arrEmpregos as $emprego) {
                     if ($emprego['nomeEmpresa']) {
@@ -425,15 +422,15 @@ class CVBusiness
                         $cvExperProfiss->setInserted(new \DateTime('now'));
                         $cvExperProfiss->setUpdated(new \DateTime('now'));
 
-                        $this->getDoctrine()->persist($cvExperProfiss);
-                        $this->getDoctrine()->flush();
+                        $this->cvEntityHandler->getDoctrine()->persist($cvExperProfiss);
+                        $this->cvEntityHandler->getDoctrine()->flush();
                     }
                 }
-                $this->getDoctrine()->refresh($cv);
+                $this->cvEntityHandler->getDoctrine()->refresh($cv);
                 return $cv;
             }
             return null;
-        } catch (ORMException $e) {
+        } catch (\Throwable $e) {
             throw new \RuntimeException('Erro ao salvar dados dos filhos.');
         }
     }
@@ -469,7 +466,7 @@ class CVBusiness
      */
     public function reenviarEmailsNaoConfirmados(): void
     {
-        $cvsNaoConfirmados = $this->getDoctrine()->getRepository(CV::class)->findBy(
+        $cvsNaoConfirmados = $this->cvEntityHandler->getDoctrine()->getRepository(CV::class)->findBy(
             [
                 'emailConfirmado' => 'N',
                 'atual' => true
@@ -486,7 +483,7 @@ class CVBusiness
      */
     public function avisarFotoFaltando(): int
     {
-        $cvsNaoConfirmados = $this->getDoctrine()->getRepository(CV::class)->findBy(
+        $cvsNaoConfirmados = $this->cvEntityHandler->getDoctrine()->getRepository(CV::class)->findBy(
             [
                 'atual' => true,
                 'foto' => null,
@@ -525,7 +522,7 @@ class CVBusiness
      */
     public function avisarNaoFechado(): int
     {
-        $cvsNaoFechados = $this->getDoctrine()->getRepository(CV::class)->findBy(
+        $cvsNaoFechados = $this->cvEntityHandler->getDoctrine()->getRepository(CV::class)->findBy(
             [
                 'atual' => true,
                 'status' => 'ABERTO',
