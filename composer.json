@@ -127,13 +127,6 @@
       "options": {
         "symlink": true
       }
-    },
-    {
-      "type": "path",
-      "url": "../crosierlib-radx/",
-      "options": {
-        "symlink": true
-      }
     }
   ]
 }
