@@ -2,7 +2,7 @@
 
 {% block up_scripts %}
     <script src='https://www.google.com/recaptcha/api.js'></script>
-    <link rel="stylesheet" href="{{ asset('build/static/cvForm/cvForm.css') }}">
+    {{ encore_entry_css_files('cvForm/cvForm') }}
 {% endblock %}
 
 {% block page_content %}
@@ -60,5 +60,5 @@
 {% endblock %}
 
 {% block down_scripts %}
-    <script src="{{ asset('build/cvForm/login.js') }}"></script>
+    {{ encore_entry_script_tags('cvForm/login') }}
 {% endblock %}

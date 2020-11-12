@@ -1,7 +1,7 @@
 {% extends 'cvForm/index.html.twig' %}
 
 {% block up_scripts %}
-    <link rel="stylesheet" href="{{ asset('build/static/cvForm/cvForm.css') }}">
+    {{ encore_entry_css_files('cvForm/cvForm') }}
 {% endblock %}
 
 {% block page_content %}
