@@ -93,7 +93,7 @@ class CVController extends BaseController
 
         /** @var CarteiraRepository $repoCarteira */
         $repoCargo = $this->getDoctrine()->getRepository(Cargo::class);
-        $cargos = $repoCargo->findBy(null, WhereBuilder::buildOrderBy('cargo'));
+        $cargos = $repoCargo->findAll(WhereBuilder::buildOrderBy('cargo'));
         $filterChoices['cargos'] = $cargos;
 
         $filterChoices['status'] = [
