@@ -63,7 +63,7 @@
     "picqer/php-barcode-generator": "^0.3.0",
     "econea/nusoap": "^0.9.7",
     "knplabs/knp-snappy-bundle": "^1.7",
-    "vich/uploader-bundle": "^1.13",
+    "vich/uploader-bundle": "^1.15",
     "symfony/messenger": "5.1.*",
     "google/recaptcha": "^1.2"
   },
