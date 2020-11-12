@@ -252,7 +252,12 @@ class CVFormController extends AbstractController
     {
         /** @var CV $logged */
         $logged = parent::getUser();
-        return $this->getDoctrine()->getRepository(CV::class)->findOneBy(['cpf' => $logged->getCpf()]);
+        // Verifica qual é o último CV. Se ainda estiver aberto, não tem pq versionar.
+        /** @var CV $ultimoCv */
+        $cv = $this->getDoctrine()->getRepository(CV::class)->findBy(['cpf' => $logged->getCpf()], ['versao' => 'DESC']);
+        $cv = $cv[0];
+
+        return $cv;
     }
 
 
@@ -268,10 +273,7 @@ class CVFormController extends AbstractController
         $vParams = [];
 
         $cv = $this->getUser();
-        // Verifica qual é o último CV. Se ainda estiver aberto, não tem pq versionar.
-        /** @var CV $ultimoCv */
-        $cv = $this->getDoctrine()->getRepository(CV::class)->findBy(['cpf' => $cv->getCpf()], ['versao' => 'DESC']);
-        $cv = $cv[0];
+
 
         $form = $this->createForm(CVType::class, $cv);
 
