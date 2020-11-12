@@ -1,67 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="icon" type="image/png" href="{{ asset('build/static/favicon.png') }}"/>
+    <link rel="icon" type="image/png" href="{{ getEnv('CROSIERCORE_URL') }}/build/static/images/favicon.ico"/>
 
-    <script src="{{ asset('build/runtime.js') }}"></script>
 
+
+    <script>
+        window.paceOptions = {
+            ajax: {
+                trackMethods: ['GET', 'POST'],
+                ignoreURLs: ['getNewMessages']
+            },
+            document: true,
+            eventLag: true
+        };
+    </script>
 
     <script src="{{ getEnv('CROSIERCORE_URL') }}/build/static/pace.min.js"></script>
 
-    <script>
-        window.onbeforeunload = function(e) {
-            document.getElementById('preloader').style.display = '';
+    <link href="{{ getEnv('CROSIERCORE_URL') }}/build/static/pace-theme-minimal.css" rel="stylesheet"/>
 
-            for (let i = 0; i < document.getElementsByClassName("blur-on-pace").length; i++) {
-                document.getElementsByClassName("blur-on-pace")[i].style.filter = 'blur(3px)';
-            }
-        };
-
-        Pace.on('start', function (e) {
-            document.getElementById('preloader').style.display = '';
-
-            for (let i = 0; i < document.getElementsByClassName("blur-on-pace").length; i++) {
-                document.getElementsByClassName("blur-on-pace")[i].style.filter = 'blur(3px)';
-            }
-        });
-
-        Pace.on('hide', function (e) {
-            document.getElementById('preloader').style.display = 'none';
-            for (let i = 0; i < document.getElementsByClassName("blur-on-pace").length; i++) {
-                document.getElementsByClassName("blur-on-pace")[i].style.filter = '';
-            }
-        });
-    </script>
-    <link href="{{ getEnv('CROSIERCORE_URL') }}/build/static/pace-theme-loading-bar.css" rel="stylesheet"/>
-
-    <title>Cadastro de Currículos - Casa Bonsucesso</title>
+    <title>Casa Bonsucesso - Cadastro de Currículos</title>
 
     {% block stylesheets %}
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
-              integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
-              crossorigin="anonymous">
-        <link rel="stylesheet" href="{{ crosierAsset('build/crosier/layout.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css">
+
+        {{ renderCrosierWebpackLinkTags('crosier/layout') }}
     {% endblock %}
 
     {% block up_scripts %}
-
-
     {% endblock %}
-
 </head>
+
+<body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
+
+<div id="preloader"></div>
 
 {% block body %}
 {% endblock %}
 
+{{ include('@CrosierLibBase/Util/flashes.html.twig') }}
 
 
-<script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+
+{{ include('@CrosierLibBase/Util/confirmationModal.html.twig') }}
+
+
+</body>
+
+
+<script src="{{ crosierAsset('bundles/fosjsrouting/js/router.min.js') }}"></script>
 <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.0.5/es6-promise.auto.min.js"></script>
-<script src="{{ crosierAsset('build/crosier/layout.js') }}"></script>
+
+{{ renderCrosierWebpackScriptTags('crosier/layout') }}
 
 {% block down_scripts %}
 {% endblock %}
