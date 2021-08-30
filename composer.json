@@ -118,14 +118,5 @@
       "allow-contrib": false,
       "require": "5.1.*"
     }
-  },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../crosierlib-base/",
-      "options": {
-        "symlink": true
-      }
-    }
-  ]
+  }
 }
