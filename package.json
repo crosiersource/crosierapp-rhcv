@@ -19,7 +19,7 @@
     "lodash": "^4.17.13",
     "lodash.merge": "^4.6.2",
     "lodash.mergewith": "^4.6.2",
-    "node-sass": "^4.11.0",
+    "node-sass": "^7.0.0",
     "numeral": "^2.0.6",
     "pace": "^0.0.4",
     "pace-progress": "HubSpot/pace",
